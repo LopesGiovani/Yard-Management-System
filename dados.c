@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "dados.h"
 
+Caminhao caminhoes[3];
+Doca docas[3];
+Operacao operacoes[3];
+
 void inicializarDados()
 {
     caminhoes[0] = (Caminhao){"ABC1234", "TransporteA", "CaminhaoA", "Joao Silva", 10};

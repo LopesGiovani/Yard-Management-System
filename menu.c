@@ -6,7 +6,7 @@ void exibirMenuPrincipal(){
     printf("1- CAMINHOES\n");
     printf("2- DOCAS\n");
     printf("4- OPERACOES\n");
-    printf("5- Consulta Filtrada de Operacoes"); // Mostra TODOS os dados de TODOS os registros de operações a partir de uma caracteristica especifica
+    printf("5- Consulta Filtrada de Operacoes\n");
     printf("6- Gerar relatórios\n");
     printf("\n");
     printf("0- SAIR\n");
@@ -18,7 +18,7 @@ void exibirSubMenuCaminhoes(){
     printf("2- CONSULTA de Veículo\n");
     printf("3- ALTERACAO DE DADOS de Veículo\n");
     printf("4- REMOCAO de Veículo\n");
-    printf("5- LISTAGEM de todos os Caminhoes\n"); //Listagem de TODOS os dados de TODOS os caminhoes
+    printf("5- LISTAGEM de todos os Caminhoes\n");
     printf("\n");
     printf("0- Voltar ao Menu Principal\n");
 }
@@ -29,7 +29,7 @@ void exibirSubMenuDocas(){
     printf("2- CONSULTA de Doca\n");
     printf("3- ALTERACAO DE DADOS de Doca\n");
     printf("4- REMOCAO de Doca\n");
-    printf("5- LISTAGEM de todas as Docas\n"); //Listagem de TODOS os dados de TODAS as docas
+    printf("5- LISTAGEM de todas as Docas\n");
     printf("\n");
     printf("0- Voltar ao Menu Principal\n");
 }
