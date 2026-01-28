@@ -30,10 +30,10 @@
 
 | Dia | Atividade | Responsável | Entrega |
 | :-- | :-- | :-- | :-- |
-| **22/01 (Qui)** | Criar repositório GitHub + estrutura de pastas | **Definir** | Repo criado + README |
-| **22/01 (Qui)** | Definir structs das 3 estruturas em C | **Definir + Definir** | Arquivo `structs.h` |
-| **23/01 (Sex)** | Implementar vetores de 5 elementos + inicialização | **Definir** | Arquivo `dados.c` |
-| **24/01 (Sáb)** | Criar sistema de menus (principal + submenus) | **Definir** | Arquivo `menu.c` |
+| **22/01 (Qui)** | Criar repositório GitHub + estrutura de pastas | **Giovani** | Repo criado + README |
+| **22/01 (Qui)** | Definir structs das 3 estruturas em C | **Felipe** | Arquivo `structs.h` |
+| **23/01 (Sex)** | Implementar vetores de 5 elementos + inicialização | **Lucas** | Arquivo `dados.c` |
+| **24/01 (Sáb)** | Criar sistema de menus (principal + submenus) | **Pedro** | Arquivo `menu.c` |
 | **25/01 (Dom)** | Revisão em grupo (todos testam no próprio PC) | **Todos** | Feedback no grupo |
 
 
@@ -43,13 +43,13 @@
 
 | Dia | Atividade | Responsável | Entrega |
 | :-- | :-- | :-- | :-- |
-| **27/01 (Seg)** | CRUD Estrutura 1 (Caminhões): Create + Read | **Definir + Definir** | Funções `cadastrarCaminhao()`, `listarCaminhoes()` |
-| **28/01 (Ter)** | CRUD Estrutura 1 (Caminhões): Update + Delete | **Definir + Definir** | Funções `editarCaminhao()`, `deletarCaminhao()` |
-| **29/01 (Qua)** | CRUD Estrutura 2 (Docas): Create + Read | **Definir + Definir** | Funções `cadastrarDoca()`, `listarDocas()` |
-| **30/01 (Qui)** | CRUD Estrutura 2 (Docas): Update + Delete | **Definir + Definir** | Funções `editarDoca()`, `deletarDoca()` |
-| **31/01 (Sex)** | Integração dos CRUDs com menus + testes | **Definir** | Sistema funcionando completo |
-| **01/02 (Sáb)** | Testes finais + correção de bugs | **Definir** | Sistema validado |
-| **02/02 (Dom)** | Preparar entrega: comentar código + gerar .zip | **Definir** | **ENTREGA 23:59** |
+| **27/01 (Seg)** | CRUD Estrutura 1 (Caminhões): Create + Read | **Giovani + Felipe** | Funções `cadastrarCaminhao()`, `listarCaminhoes()` |
+| **28/01 (Ter)** | CRUD Estrutura 1 (Caminhões): Update + Delete | **Giovani + Felipe** | Funções `editarCaminhao()`, `deletarCaminhao()` |
+| **29/01 (Qua)** | CRUD Estrutura 2 (Docas): Create + Read | **Lucas + Pedro** | Funções `cadastrarDoca()`, `listarDocas()` |
+| **30/01 (Qui)** | CRUD Estrutura 2 (Docas): Update + Delete | **Lucas + Pedro** | Funções `editarDoca()`, `deletarDoca()` |
+| **31/01 (Sex)** | Integração dos CRUDs com menus + testes | **Vitor** | Sistema funcionando completo |
+| **01/02 (Sáb)** | Testes finais + correção de bugs | **Todos** | Sistema validado |
+| **02/02 (Dom)** | Preparar entrega: comentar código + gerar .zip | **Vitor** | **ENTREGA 23:59** |
 
 
 ***
@@ -76,7 +76,7 @@
 
 ## 🔧 Divisão Técnica Detalhada
 
-### 1️⃣ **Definir + Definir** → CRUD Caminhões (Estrutura 1)
+### 1️⃣ **Giovani + Felipe** → CRUD Caminhões (Estrutura 1)
 
 **Funções a implementar:**
 
@@ -103,7 +103,7 @@ void deletarCaminhao(Caminhao caminhoes[], int *qtd);
 
 ***
 
-### 2️⃣ **Definir + Definir** → CRUD Docas (Estrutura 2)
+### 2️⃣ **Lucas + Pedro** → CRUD Docas (Estrutura 2)
 
 **Funções a implementar:**
 
@@ -131,7 +131,7 @@ void deletarDoca(Doca docas[], int *qtd);
 
 ***
 
-### 3️⃣ **Definir** → Sistema de Menus
+### 3️⃣ **Vitor** → Sistema de Menus
 
 **Estrutura do menu:**
 
@@ -154,7 +154,7 @@ Escolha uma opção: _
 
 ***
 
-### 4️⃣ **Definir** → Inicialização de Dados
+### 4️⃣ **Vitor** → Inicialização de Dados
 
 **Responsabilidade:**
 
@@ -196,7 +196,7 @@ Caminhao caminhoes[5] = {
 
 **Grupo WhatsApp:**
 
-- **Reuniões obrigatórias:** Domingo (25/01) e Sábado (01/02) às 20h **Definir**
+- **Reuniões obrigatórias:** Domingo (25/01) e Sábado (01/02) às 20h **(Via Discord)**
 - **Daily check-in:** Cada um posta no grupo às 21h o que fez no dia **Opicional**
 
 **GitHub:**
