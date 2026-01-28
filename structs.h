@@ -1,3 +1,6 @@
+#ifndef STRUCTS_H
+#define STRUCTS_H
+
 #include <time.h>
 
 typedef enum
@@ -26,28 +29,30 @@ typedef struct
     char transportadora[50];
     char tipoVeiculo[50];
     char motoristaNome[50];
-    float capacidadeCarga; // Capacidade do caminhao em Toneladas
+    float capacidadeCarga; // Tons
 
 } Caminhao;
 
 typedef struct
 {
     int numeroDoca;
-    TipoDoca tipo;     // Tipo carga ou descarga
-    StatusDoca status; // Tipo Livre ou ocupada
+    TipoDoca tipo;
+    StatusDoca status;
     float capacidadeMaxima;
 } Doca;
 
 typedef struct
 {
     char codigoOperacao[10];
-    char placaCaminhao[8]; // referencia Caminhao
-    int numeroDoca;        // referencia Doca
+    char placaCaminhao[8];  // FK to Caminhao
+    int numeroDoca;         // FK to Doca
     struct tm dataHoraChegada;
     struct tm horaInicio;
     struct tm horaTermino;
-    TipoDoca tipo; // Tipo carga ou descarga
+    TipoDoca tipo;
     char produto[50];
-    float pesoCarga; // Peso da carga em toneladas
+    float pesoCarga; // Tons
     StatusOperacao status;
 } Operacao;
+
+#endif
