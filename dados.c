@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "dados.h"
 
-Caminhao caminhoes[3];
-Doca docas[3];
-Operacao operacoes[3];
+Caminhao caminhoes[5];
+Doca docas[5];
+Operacao operacoes[5];
 
 void inicializarDados()
 {
