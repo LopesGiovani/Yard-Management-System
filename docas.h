@@ -3,14 +3,14 @@
 
 #include <stdio.h>
 #include "structs.h"
-#include "docas.h"
+
 
 // Create
 void cadastrarDoca(Doca *docas, int *totalDocas);
 
 // Read
 void listarDocas(Doca *docas, int *totalDocas);
-Doca *buscarDocaPorNumero(Doca *docas, int *totalDocas, int *numero);
+Doca *buscarDocaPorNumero(Doca *docas, int *totalDocas, int numero);
 
 // Update
 void editarDoca(Doca *docas, int *totalDocas);

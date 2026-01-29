@@ -23,7 +23,7 @@ void cadastrarDoca(Doca *docas, int *totalDocas)
     limparBuffer();
     scanf("%d", &new.numeroDoca);
 
-    if (buscarDocaPorNumero(docas, *totalDocas, new.numeroDoca) != NULL)
+    if (buscarDocaPorNumero(docas, totalDocas, new.numeroDoca) != NULL)
     {
         printf("ERRO: Ja existe uma doca cadastrada com este numero.\n");
         return;
@@ -55,7 +55,6 @@ void cadastrarDoca(Doca *docas, int *totalDocas)
         if (new.capacidadeMaxima == 0)
         {
             printf("ERRO: A capacidade maxima deve ser maior que zero.\n");
-            return;
         }
     } while (new.capacidadeMaxima == 0);
 
@@ -114,4 +113,64 @@ void deletarDoca(Doca *docas, int *totalDocas)
     }
     (*totalDocas)--;
     printf("Doca deletada com sucesso!\n");
+}
+    
+
+    void editarDoca(Doca *docas, int *totalDocas)
+    {
+        
+        int numero;
+        printf("\n--- Editar Doca ---\n");
+        printf("Digite o numero da doca a ser editada: ");
+        limparBuffer();
+        scanf("%d", &numero);
+
+        Doca *doca = buscarDocaPorNumero(docas, totalDocas, numero);
+        if (doca == NULL)
+        {
+            printf("ERRO: Doca com numero %d nao encontrada.\n", numero);
+            return;
+        }
+
+        do
+    {
+        printf("Digite o novo tipo da Doca (CARGA [0] ou DESCARGA [1]): ");
+        limparBuffer();
+        scanf("%d", (int *)&doca->tipo);
+        if (doca->tipo != 0 && doca->tipo != 1)
+            printf("ERRO: O tipo deve ser CARGA [0] ou DESCARGA [1].\n");
+    } while (doca->tipo != 0 && doca->tipo != 1);
+
+        do
+    {
+        printf("Digite o novo status da Doca (LIVRE [0] ou OCUPADA [1]): ");
+        limparBuffer();
+        scanf("%d", (int *)&doca->status);
+        if (doca->status != 0 && doca->status != 1)
+            printf("ERRO: O status deve ser LIVRE [0] ou OCUPADA [1].\n");
+    } while (doca->status != 0 && doca->status != 1);
+
+        do
+    {
+        printf("Digite a capacidade maxima da Doca (em toneladas): ");
+        limparBuffer();
+        scanf("%f", &doca->capacidadeMaxima);
+        if (doca->capacidadeMaxima == 0)
+        {
+            printf("ERRO: A capacidade maxima deve ser maior que zero.\n");
+        }
+    } while (doca->capacidadeMaxima == 0);
+        printf("Doca editada com sucesso!\n");
+}
+
+Doca *buscarDocaPorNumero(Doca *docas, int *totalDocas, int numero)
+{
+    for (int i = 0; i < *totalDocas; i++)
+    {
+        if ((docas + i)->numeroDoca == numero)
+        {
+            return (docas + i);
+        }
+    }
+    return NULL;
 }
