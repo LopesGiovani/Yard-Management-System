@@ -1,7 +1,6 @@
 #ifndef DOCAS_H
 #define DOCAS_H
 
-#include <stdio.h>
 #include "structs.h"
 
 

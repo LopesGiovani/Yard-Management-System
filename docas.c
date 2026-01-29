@@ -2,7 +2,8 @@
 #include "docas.h"
 #include "structs.h"
 
-void limparBuffer()
+// 'static' torna a funcao visivel apenas neste arquivo, evitando conflito de nomes com outros modulos (erro de linker)
+static void limparBuffer()
 {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
