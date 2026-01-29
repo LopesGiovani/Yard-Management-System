@@ -129,7 +129,7 @@ void editarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     fgets(novoMotorista, 50, stdin);
     if (novoMotorista[0] != '\n')
     {
-        strcpy(encontrado->transportadora, novoMotorista);
+        strcpy(encontrado->motoristaNome, novoMotorista);
     }
 
     printf("Caminhao atualizado!\n");
@@ -152,9 +152,9 @@ void deletarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
 
     int indice = -1;
 
-    for (int i = 0; i < totalCaminhoes; i++)
+    for (int i = 0; i < *totalCaminhoes; i++)
     {
-        if (strcmp((caminhoes + i)->placa) == 0)
+        if (strcmp((caminhoes + i)->placa, placaTemp) == 0)
         {
             indice = i;
             break; // Para sair do loop apenas
