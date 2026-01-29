@@ -63,3 +63,23 @@ void cadastrarDoca(Doca *docas, int *totalDocas)
     (*totalDocas)++;
     printf("Doca cadastrada com sucesso!\n");
 }
+void listarDocas(Doca *docas, int *totalDocas)
+{
+    printf("\n--- Lista de Docas ---\n");
+
+    if (*totalDocas == 0)
+    {
+        printf("Nenhuma doca cadastrada.\n");
+        return;
+    }
+
+    for (int i = 0; i < *totalDocas; i++)
+    {
+        printf("Doca %d\n", i + 1);
+        printf("Numero: %d\n", (docas + i)->numeroDoca);
+        printf("Tipo: %s\n", (docas + i)->tipo == CARGA ? "CARGA" : "DESCARGA");
+        printf("Status: %s\n", (docas + i)->status == LIVRE ? "LIVRE" : "OCUPADA");
+        printf("Capacidade Maxima: %.2f toneladas\n", (docas + i)->capacidadeMaxima);
+        printf("--------------------------\n");
+    }
+}
