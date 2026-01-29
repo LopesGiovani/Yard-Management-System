@@ -68,13 +68,13 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
 void listarCaminhoes(Caminhao *caminhoes, int *totalCaminhoes)
 {
     printf("\n--- Lista de Caminhoes Cadastrados ---\n");
-    if (totalCaminhoes == 0)
+    if (*totalCaminhoes == 0) 
     {
         printf("Nenhum caminhao cadastrado.\n");
         return;
     }
 
-    for (int i = 0; i < totalCaminhoes; i++)
+    for (int i = 0; i < *totalCaminhoes; i++) 
     {
         printf("Caminhao %d:\n", i + 1);
         printf("Placa: %s", (caminhoes + i)->placa);
@@ -88,7 +88,7 @@ void listarCaminhoes(Caminhao *caminhoes, int *totalCaminhoes)
 
 Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int *totalCaminhoes, char *placa)
 {
-    for (int i = 0; i < totalCaminhoes; i++)
+    for (int i = 0; i < *totalCaminhoes; i++) 
     {
         if (strcmp((caminhoes + i)->placa, placa) == 0)
         {
