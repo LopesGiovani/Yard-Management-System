@@ -98,3 +98,80 @@ Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int *totalCaminhoes, char 
 
     return NULL;
 }
+
+void editarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
+{
+    char placaTemp[8];
+    printf("\n--- Editar Caminhao ---\n");
+    printf("Digite a placa do caminhao desejado: ");
+    limparBuffer();
+    fgets(placaTemp, 8, stdin);
+    Caminhao *encontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
+
+    if (encontrado == NULL)
+    {
+        printf("ERRO: Caminhao nao encontrado\n");
+        return;
+    }
+
+    printf("Editando caminhao da placa %s\n", placaTemp);
+
+    printf("Nova Transportadora (Enter mantem '%s'): ", encontrado->transportadora);
+    char novaTransp[50];
+    fgets(novaTransp, 50, stdin);
+    if (novaTransp[0] != '\n')
+    {
+        strcpy(encontrado->transportadora, novaTransp);
+    }
+
+    printf("Novo motorista (Enter mantem '%s'): ", encontrado->motoristaNome);
+    char novoMotorista[50];
+    fgets(novoMotorista, 50, stdin);
+    if (novoMotorista[0] != '\n')
+    {
+        strcpy(encontrado->transportadora, novoMotorista);
+    }
+
+    printf("Caminhao atualizado!\n");
+}
+
+void deletarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
+{
+    char placaTemp[8];
+    printf("\n--- Deletar Caminhao ---\n");
+    printf("Digite a placa do caminhao desejado: ");
+    limparBuffer();
+    fgets(placaTemp, 8, stdin);
+    Caminhao *encontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
+
+    if (encontrado == NULL)
+    {
+        printf("ERRO: Caminhao nao encontrado\n");
+        return;
+    }
+
+    int indice = -1;
+
+    for (int i = 0; i < totalCaminhoes; i++)
+    {
+        if (strcmp((caminhoes + i)->placa) == 0)
+        {
+            indice = i;
+            break; // Para sair do loop apenas
+        }
+    }
+
+    if (indice == -1)
+    {
+        printf("ERRO: Caminhao nao encontrado.\n");
+        return;
+    }
+
+    for (int i = indice; i < *totalCaminhoes - 1; i++)
+    {
+        caminhoes[i] = caminhoes[i + 1];
+    }
+
+    (*totalCaminhoes)--;
+    printf("Caminhao removido com sucesso.\n");
+}
