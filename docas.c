@@ -83,3 +83,35 @@ void listarDocas(Doca *docas, int *totalDocas)
         printf("--------------------------\n");
     }
 }
+
+void deletarDoca(Doca *docas, int *totalDocas)
+{
+    int numero;
+    printf("\n--- Deletar Doca ---\n");
+    printf("Digite o numero da doca a ser deletada: ");
+    limparBuffer();
+    scanf("%d", &numero);
+
+    int indice = -1;
+    for (int i = 0; i < *totalDocas; i++)
+    {
+        if ((docas + i)->numeroDoca == numero)
+        {
+            indice = i;
+            break;
+        }
+    }
+
+    if (indice == -1)
+    {
+        printf("ERRO: Doca com numero %d nao encontrada.\n", numero);
+        return;
+    }
+
+    for (int i = indice; i < *totalDocas - 1; i++)
+    {
+        docas[i] = docas[i + 1];
+    }
+    (*totalDocas)--;
+    printf("Doca deletada com sucesso!\n");
+}
