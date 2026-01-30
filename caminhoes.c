@@ -10,8 +10,6 @@ static void limparBuffer()
         ;
 }
 
-Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int *totalCaminhoes, char *placa);
-
 void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
 {
 
@@ -65,6 +63,7 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
 
     printf("Capacidade de Carga (toneladas): ");
     scanf("%f", &novo.capacidadeCarga);
+    limparBuffer();
 
     caminhoes[(*totalCaminhoes)] = novo;
 

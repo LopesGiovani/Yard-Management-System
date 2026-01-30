@@ -5,10 +5,10 @@ void exibirMenuPrincipal(){
     printf("---------- Menu Principal ----------\n\n");
     printf("1- CAMINHOES\n");
     printf("2- DOCAS\n");
-    printf("4- OPERACOES\n");
-    printf("5- Consulta Filtrada de Operacoes\n");
-    printf("6- Gerar relatórios\n");
-    printf("\n");
+    printf("3- OPERACOES\n");
+    printf("4- Consulta Filtrada de Operacoes\n");
+    printf("5- Gerar relatórios\n");
+    printf("-----------------------------------\n");
     printf("0- SAIR\n");
 }
 
