@@ -7,7 +7,7 @@ void exibirMenuPrincipal(){
     printf("2- DOCAS\n");
     printf("3- OPERACOES\n");
     printf("4- Consulta Filtrada de Operacoes\n");
-    printf("5- Gerar relatorios\n");
+    printf("5- Gerar relatórios\n");
     printf("-----------------------------------\n");
     printf("0- SAIR\n");
 }
