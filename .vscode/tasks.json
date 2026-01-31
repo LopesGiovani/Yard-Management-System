@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Compilar Projeto MVC",
+            "command": "C:\\MinGW\\bin\\gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-I${workspaceFolder}/include",
+                "${workspaceFolder}/controller/main.c",
+                "${workspaceFolder}/view/menu.c",
+                "${workspaceFolder}/model/caminhoes.c",
+                "${workspaceFolder}/model/dados.c",
+                "${workspaceFolder}/model/docas.c",
+                "-o",
+                "${workspaceFolder}/sistema.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compilação completa do Yard Management System em MVC."
+        }
+    ]
+}

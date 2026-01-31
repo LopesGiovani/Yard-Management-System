@@ -2,6 +2,8 @@
 #define MENU_H
 
 void exibirMenuPrincipal();
+
+// Sub-menus
 void exibirSubMenuDocas();
 void exibirSubMenuCaminhoes();
 void exibirSubMenuOperacoes();

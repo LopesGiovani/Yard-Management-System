@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "docas.h"
-#include "structs.h"
 
 // 'static' torna a funcao visivel apenas neste arquivo, evitando conflito de nomes com outros modulos (erro de linker)
 static void limparBuffer()
@@ -21,8 +20,8 @@ void cadastrarDoca(Doca *docas, int *totalDocas)
     Doca new;
     printf("\n--- Cadastrar Doca ---\n");
     printf("Digite o numero da doca: ");
-    limparBuffer();
     scanf("%d", &new.numeroDoca);
+    limparBuffer();
 
     if (buscarDocaPorNumero(docas, totalDocas, new.numeroDoca) != NULL)
     {
@@ -33,8 +32,8 @@ void cadastrarDoca(Doca *docas, int *totalDocas)
     do
     {
         printf("Digite o tipo da Doca (CARGA [0] ou DESCARGA [1]): ");
-        limparBuffer();
         scanf("%d", (int *)&new.tipo);
+        limparBuffer();
         if (new.tipo != 0 && new.tipo != 1)
             printf("ERRO: O tipo deve ser CARGA [0] ou DESCARGA [1].\n");
     } while (new.tipo != 0 && new.tipo != 1);
@@ -42,8 +41,8 @@ void cadastrarDoca(Doca *docas, int *totalDocas)
     do
     {
         printf("Digite o status da Doca (LIVRE [0] ou OCUPADA [1]): ");
-        limparBuffer();
         scanf("%d", (int *)&new.status);
+        limparBuffer();
         if (new.status != 0 && new.status != 1)
             printf("ERRO: O status deve ser LIVRE [0] ou OCUPADA [1].\n");
     } while (new.status != 0 && new.status != 1);
@@ -51,18 +50,18 @@ void cadastrarDoca(Doca *docas, int *totalDocas)
     do
     {
         printf("Digite a capacidade maxima da Doca (em toneladas): ");
-        limparBuffer();
         scanf("%f", &new.capacidadeMaxima);
-        if (new.capacidadeMaxima == 0)
+        limparBuffer();
+        if (new.capacidadeMaxima <= 0)
         {
             printf("ERRO: A capacidade maxima deve ser maior que zero.\n");
         }
-    } while (new.capacidadeMaxima == 0);
-
+    } while (new.capacidadeMaxima <= 0);
     docas[*totalDocas] = new;
     (*totalDocas)++;
     printf("Doca cadastrada com sucesso!\n");
 }
+
 void listarDocas(Doca *docas, int *totalDocas)
 {
     printf("\n--- Lista de Docas ---\n");
@@ -89,8 +88,8 @@ void deletarDoca(Doca *docas, int *totalDocas)
     int numero;
     printf("\n--- Deletar Doca ---\n");
     printf("Digite o numero da doca a ser deletada: ");
-    limparBuffer();
     scanf("%d", &numero);
+    limparBuffer();
 
     int indice = -1;
     for (int i = 0; i < *totalDocas; i++)
@@ -123,8 +122,8 @@ void deletarDoca(Doca *docas, int *totalDocas)
         int numero;
         printf("\n--- Editar Doca ---\n");
         printf("Digite o numero da doca a ser editada: ");
-        limparBuffer();
         scanf("%d", &numero);
+        limparBuffer();
 
         Doca *doca = buscarDocaPorNumero(docas, totalDocas, numero);
         if (doca == NULL)
@@ -136,8 +135,8 @@ void deletarDoca(Doca *docas, int *totalDocas)
         do
     {
         printf("Digite o novo tipo da Doca (CARGA [0] ou DESCARGA [1]): ");
-        limparBuffer();
         scanf("%d", (int *)&doca->tipo);
+        limparBuffer();
         if (doca->tipo != 0 && doca->tipo != 1)
             printf("ERRO: O tipo deve ser CARGA [0] ou DESCARGA [1].\n");
     } while (doca->tipo != 0 && doca->tipo != 1);
@@ -145,8 +144,8 @@ void deletarDoca(Doca *docas, int *totalDocas)
         do
     {
         printf("Digite o novo status da Doca (LIVRE [0] ou OCUPADA [1]): ");
-        limparBuffer();
         scanf("%d", (int *)&doca->status);
+        limparBuffer();
         if (doca->status != 0 && doca->status != 1)
             printf("ERRO: O status deve ser LIVRE [0] ou OCUPADA [1].\n");
     } while (doca->status != 0 && doca->status != 1);
@@ -154,13 +153,13 @@ void deletarDoca(Doca *docas, int *totalDocas)
         do
     {
         printf("Digite a capacidade maxima da Doca (em toneladas): ");
-        limparBuffer();
         scanf("%f", &doca->capacidadeMaxima);
-        if (doca->capacidadeMaxima == 0)
+        limparBuffer();
+        if (doca->capacidadeMaxima <= 0)
         {
             printf("ERRO: A capacidade maxima deve ser maior que zero.\n");
         }
-    } while (doca->capacidadeMaxima == 0);
+    } while (doca->capacidadeMaxima <= 0);
         printf("Doca editada com sucesso!\n");
 }
 
@@ -174,4 +173,21 @@ Doca *buscarDocaPorNumero(Doca *docas, int *totalDocas, int numero)
         }
     }
     return NULL;
+}
+
+// transformar os enums em textos légiveis para serem printados na main
+const char* traduzirTipo(TipoDoca tipo) {
+    switch (tipo) {
+        case CARGA:    return "Carga";
+        case DESCARGA: return "Descarga";
+        default:       return "Indefinido";
+    }
+}
+
+const char* traduzirStatus(StatusDoca status) {
+    switch (status) {
+        case LIVRE:   return "Livre";
+        case OCUPADA: return "Ocupada";
+        default:      return "Indefinido";
+    }
 }
