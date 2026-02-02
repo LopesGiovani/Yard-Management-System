@@ -35,7 +35,7 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     do
     {
         printf("Digite a transportadora: ");
-        limparBuffer();
+
         fgets(novo.transportadora, 50, stdin);
         novo.transportadora[strcspn(novo.transportadora, "\n")] = 0;
         if (strlen(novo.transportadora) == 0)
@@ -45,7 +45,7 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     do
     {
         printf("Tipo de Veiculo: ");
-        // limparBuffer(); // fgets anterior já consumiu
+
         fgets(novo.tipoVeiculo, 50, stdin);
         novo.tipoVeiculo[strcspn(novo.tipoVeiculo, "\n")] = 0;
         if (strlen(novo.tipoVeiculo) == 0)
@@ -128,7 +128,7 @@ void editarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
 
     printf("Nova Transportadora (Enter mantem '%s'): ", encontrado->transportadora);
     char novaTransp[50];
-    limparBuffer();
+
     fgets(novaTransp, 50, stdin);
     if (novaTransp[0] != '\n')
     {
