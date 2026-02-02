@@ -61,6 +61,7 @@ void cadastrarDoca(Doca *docas, int *totalDocas)
     (*totalDocas)++;
     printf("Doca cadastrada com sucesso!\n");
 }
+
 void listarDocas(Doca *docas, int *totalDocas)
 {
     printf("\n--- Lista de Docas ---\n");
@@ -172,4 +173,21 @@ Doca *buscarDocaPorNumero(Doca *docas, int *totalDocas, int numero)
         }
     }
     return NULL;
+}
+
+// transformar os enums em textos légiveis para serem printados na main
+const char* traduzirTipo(TipoDoca tipo) {
+    switch (tipo) {
+        case CARGA:    return "Carga";
+        case DESCARGA: return "Descarga";
+        default:       return "Indefinido";
+    }
+}
+
+const char* traduzirStatus(StatusDoca status) {
+    switch (status) {
+        case LIVRE:   return "Livre";
+        case OCUPADA: return "Ocupada";
+        default:      return "Indefinido";
+    }
 }

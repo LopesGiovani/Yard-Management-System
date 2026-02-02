@@ -137,8 +137,13 @@ O sistema gera arquivos `.txt` formatados, com base em filtros fornecidos pelo u
 
 ## Como compilar e executar
 
-Exemplo usando `gcc`:
+### Opção 1: Via CodeBlocks (Recomendado)
+1. Abra o arquivo `projeto_patio/projeto_patio.cbp`.
+2. Clique em **Build & Run** (F9).
 
+### Opção 2: Via Terminal (GCC)
 ```bash
-gcc main.c -o gestao_patio
+cd projeto_patio
+gcc main.c caminhoes.c docas.c dados.c menu.c -o gestao_patio
 ./gestao_patio
+```

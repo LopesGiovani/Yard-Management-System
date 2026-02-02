@@ -1,6 +1,6 @@
 #include "caminhoes.h"
 #include <stdio.h>
-#include <string.h> 
+#include <string.h>
 
 // 'static' torna a funcao visivel apenas neste arquivo, evitando conflito de nomes com outros modulos (erro de linker)
 static void limparBuffer()
@@ -24,7 +24,7 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     printf("Digite a placa do caminhao: ");
     limparBuffer();
     fgets(novo.placa, 8, stdin);
-    novo.placa[strcspn(novo.placa, "\n")] = 0; 
+    novo.placa[strcspn(novo.placa, "\n")] = 0;
 
     if (buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, novo.placa) != NULL)
     {
@@ -35,9 +35,9 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     do
     {
         printf("Digite a transportadora: ");
-        limparBuffer();
+
         fgets(novo.transportadora, 50, stdin);
-        novo.transportadora[strcspn(novo.transportadora, "\n")] = 0; 
+        novo.transportadora[strcspn(novo.transportadora, "\n")] = 0;
         if (strlen(novo.transportadora) == 0)
             printf("ERRO: O campo nao pode ser vazio.\n");
     } while (strlen(novo.transportadora) == 0);
@@ -45,9 +45,9 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     do
     {
         printf("Tipo de Veiculo: ");
-        // limparBuffer(); // fgets anterior já consumiu
+
         fgets(novo.tipoVeiculo, 50, stdin);
-        novo.tipoVeiculo[strcspn(novo.tipoVeiculo, "\n")] = 0; 
+        novo.tipoVeiculo[strcspn(novo.tipoVeiculo, "\n")] = 0;
         if (strlen(novo.tipoVeiculo) == 0)
             printf("ERRO: O campo nao pode ser vazio.\n");
     } while (strlen(novo.tipoVeiculo) == 0);
@@ -56,7 +56,7 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     {
         printf("Nome do Motorista: ");
         fgets(novo.motoristaNome, 50, stdin);
-        novo.motoristaNome[strcspn(novo.motoristaNome, "\n")] = 0; 
+        novo.motoristaNome[strcspn(novo.motoristaNome, "\n")] = 0;
         if (strlen(novo.motoristaNome) == 0)
             printf("ERRO: O campo nao pode ser vazio.\n");
     } while (strlen(novo.motoristaNome) == 0);
@@ -75,13 +75,13 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
 void listarCaminhoes(Caminhao *caminhoes, int *totalCaminhoes)
 {
     printf("\n--- Lista de Caminhoes Cadastrados ---\n");
-    if (*totalCaminhoes == 0) 
+    if (*totalCaminhoes == 0)
     {
         printf("Nenhum caminhao cadastrado.\n");
         return;
     }
 
-    for (int i = 0; i < *totalCaminhoes; i++) 
+    for (int i = 0; i < *totalCaminhoes; i++)
     {
         printf("Caminhao %d:\n", i + 1);
         printf("Placa: %s\n", (caminhoes + i)->placa);
@@ -95,10 +95,11 @@ void listarCaminhoes(Caminhao *caminhoes, int *totalCaminhoes)
 
 Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int *totalCaminhoes, char *placa)
 {
-    for (int i = 0; i < *totalCaminhoes; i++) 
+    for (int i = 0; i < *totalCaminhoes; i++)
     {
         if (strcmp((caminhoes + i)->placa, placa) == 0)
         {
+        
             return (caminhoes + i);
         }
     }
@@ -113,7 +114,7 @@ void editarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     printf("Digite a placa do caminhao desejado: ");
     limparBuffer();
     fgets(placaTemp, 8, stdin);
-    placaTemp[strcspn(placaTemp, "\n")] = 0; 
+    placaTemp[strcspn(placaTemp, "\n")] = 0;
 
     Caminhao *encontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
 
@@ -127,10 +128,11 @@ void editarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
 
     printf("Nova Transportadora (Enter mantem '%s'): ", encontrado->transportadora);
     char novaTransp[50];
+
     fgets(novaTransp, 50, stdin);
     if (novaTransp[0] != '\n')
     {
-        novaTransp[strcspn(novaTransp, "\n")] = 0; 
+        novaTransp[strcspn(novaTransp, "\n")] = 0;
         strcpy(encontrado->transportadora, novaTransp);
     }
 
@@ -139,7 +141,7 @@ void editarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     fgets(novoMotorista, 50, stdin);
     if (novoMotorista[0] != '\n')
     {
-        novoMotorista[strcspn(novoMotorista, "\n")] = 0; 
+        novoMotorista[strcspn(novoMotorista, "\n")] = 0;
         strcpy(encontrado->motoristaNome, novoMotorista);
     }
 
@@ -153,7 +155,7 @@ void deletarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     printf("Digite a placa do caminhao desejado: ");
     limparBuffer();
     fgets(placaTemp, 8, stdin);
-    placaTemp[strcspn(placaTemp, "\n")] = 0; 
+    placaTemp[strcspn(placaTemp, "\n")] = 0;
 
     Caminhao *encontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
 
