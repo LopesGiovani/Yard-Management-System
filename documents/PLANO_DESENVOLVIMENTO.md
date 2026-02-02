@@ -16,11 +16,11 @@
 
 ## 🎯 O que precisa estar pronto
 
-- [ ] **3 Estruturas** (Caminhões, Docas, Operações)
-- [ ] **1 Vetor de 5 elementos** para cada estrutura
-- [ ] **Sistema de Menus**
-- [ ] **Funções iniciais** (manipulação básica)
-- [ ] **CRUD completo** das Estruturas 1 e 2 (Caminhões e Docas)
+- [x] **3 Estruturas** (Caminhões, Docas, Operações)
+- [x] **1 Vetor de 5 elementos** para cada estrutura
+- [x] **Sistema de Menus**
+- [x] **Funções iniciais** (manipulação básica)
+- [x] **CRUD completo** das Estruturas 1 e 2 (Caminhões e Docas)
 
 ***
 
@@ -56,20 +56,18 @@
 
 ## 📂 Estrutura de Arquivos do Projeto
 
-```
-├── projeto_patio.cbp          # Projeto CodeBlocks
-├── main.c                      # Arquivo principal (main)
-├── structs.h                   # Definição das structs
-├── dados.c                     # Vetores + inicialização
-├── dados.h                     # Cabeçalho do dados.c
-├── menu.c                      # Sistema de menus
-├── menu.h                      # Cabeçalho do menu.c
-├── caminhoes.c                 # CRUD de Caminhões (Estrutura 1)
-├── caminhoes.h                 # Cabeçalho do caminhoes.c
-├── docas.c                     # CRUD de Docas (Estrutura 2)
-├── docas.h                     # Cabeçalho do docas.c
-└── README.md                   # Documentação do projeto
-```
+├── documents/                  # Documentação
+│   ├── PLANO_DESENVOLVIMENTO.md
+│   └── README.md
+└── projeto_patio/              # Código Fonte e Projeto
+    ├── projeto_patio.cbp       # Projeto CodeBlocks
+    ├── main.c
+    ├── menu.c / menu.h
+    ├── dados.c / dados.h
+    ├── caminhoes.c / caminhoes.h
+    ├── docas.c / docas.h
+    ├── structs.h
+    └── README.txt              # Identificação do Grupo
 
 
 ***
@@ -224,14 +222,14 @@ Caminhao caminhoes[5] = {
 
 Antes de compactar o arquivo, verificar:
 
-- [ ] Projeto compila sem erros no CodeBlocks
-- [ ] Todas as funções CRUD funcionam corretamente
-- [ ] Menus navegam sem travar
-- [ ] Validações impedem dados inválidos
-- [ ] Código está comentado
-- [ ] README.md está atualizado
-- [ ] Nome da pasta segue o padrão (sem espaços/acentos)
-- [ ] Arquivo .zip contém APENAS arquivos necessários
+- [x] Projeto compila sem erros no CodeBlocks
+- [x] Todas as funções CRUD funcionam corretamente
+- [x] Menus navegam sem travar
+- [x] Validações impedem dados inválidos
+- [x] Código está comentado
+- [x] README.md está atualizado
+- [x] Nome da pasta segue o padrão (sem espaços/acentos)
+- [x] Arquivo .zip contém APENAS arquivos necessários
 - [ ] Testado em pelo menos 2 máquinas diferentes
 
 ***
