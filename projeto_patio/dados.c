@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "dados.h"
 
-#define EXTRA 5  // constante de slots extras
 
 Caminhao *caminhoes;
 Doca *docas;

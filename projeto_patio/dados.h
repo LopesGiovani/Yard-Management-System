@@ -2,7 +2,7 @@
 #define DADOS_H
 
 #include "structs.h"
-#define EXTRA 5;
+#define EXTRA 5
 
 // Declaração das variáveis globais
 extern Caminhao *caminhoes;

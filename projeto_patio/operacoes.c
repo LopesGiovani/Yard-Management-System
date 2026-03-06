@@ -2,6 +2,8 @@
 #include "dados.h"
 #include "structs.h"
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 static void limparBuffer()
 {
@@ -146,6 +148,4 @@ void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *cami
     (*operacoes)[*totalOperacoes] = nova;   // coloca na posição atual
     (*totalOperacoes)++;
     printf("Operacao cadastrada com sucesso!\n");
-
 }
-
