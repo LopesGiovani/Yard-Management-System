@@ -3,22 +3,21 @@
 
 #include "structs.h"
 
-
 // Create
-void cadastrarDoca(Doca *docas, int *totalDocas);
+void cadastrarDoca(Doca **docas, int *totalDocas, int *capDocas);
 
 // Read
-void listarDocas(Doca *docas, int *totalDocas);
-Doca *buscarDocaPorNumero(Doca *docas, int *totalDocas, int numero);
+void listarDocas(Doca *docas, int totalDocas);
+Doca *buscarDocaPorNumero(Doca *docas, int totalDocas, int numero);
 
 // Update
-void editarDoca(Doca *docas, int *totalDocas);
+void editarDoca(Doca *docas, int totalDocas);
 
 // Delete
-void deletarDoca(Doca *docas, int *totalDocas);
+void deletarDoca(Doca **docas, int *totalDocas, int *capDocas,
+                 Operacao *operacoes, int totalOperacoes);
 
-// Operações para que os enums sejam legiveis na main ao serem printados
-const char* traduzirTipo(TipoDoca tipo);
-const char* traduzirStatus(StatusDoca status);
+const char *traduzirTipo(TipoDoca tipo);
+const char *traduzirStatus(StatusDoca status);
 
 #endif

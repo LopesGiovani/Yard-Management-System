@@ -43,7 +43,7 @@ void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *cami
     if (*totalOperacoes >= *capOperacoes)
     {
         int novaCap = *capOperacoes + EXTRA;
-        Operacao *temp = realoc(*operacoes, novaCap * sizeof(Operacao));
+        Operacao *temp = realloc(*operacoes, novaCap * sizeof(Operacao));
 
         if (temp == NULL)
         {

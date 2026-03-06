@@ -14,7 +14,7 @@ void listarOperacoes(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoe
 void bucarOperacao(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
 
 //Update
-void editarOperacao(Operacao *operacoes, int totalOperacoes);
+void editarOperacao(Operacao *operacoes, int totalOperacoes); 
 
 //Delete
 void deletarOperacao(Operacao *operacoes, int *totalOperacoes);

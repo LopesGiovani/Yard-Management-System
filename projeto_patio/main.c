@@ -3,6 +3,7 @@
 #include "menu.h"
 #include "caminhoes.h"
 #include "docas.h"
+#include "operacoes.h"
 #include "dados.h"
 
 void limparBuffer() {
@@ -43,7 +44,7 @@ int main() {
 
                     switch (subEscolhaCaminhoes) { // SUBMENU CAMINHÕES
                         case 1:
-                            cadastrarCaminhao(caminhoes, &totalCaminhoes);
+                            cadastrarCaminhao(&caminhoes, &totalCaminhoes, &capCaminhoes);
                             break;
                         case 2: {
                             char placaBusca[8];
@@ -51,7 +52,7 @@ int main() {
                             scanf("%7s", placaBusca);
                             limparBuffer();
 
-                            Caminhao *caminhaoEncontrado = buscarCaminhaoPorPlaca(caminhoes, &totalCaminhoes, placaBusca);
+                            Caminhao *caminhaoEncontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaBusca);
 
                             if (caminhaoEncontrado != NULL) {
                                 printf("\nCaminhao encontrado!\n");
@@ -65,13 +66,13 @@ int main() {
                             break;
                         }
                         case 3:
-                            editarCaminhao(caminhoes, &totalCaminhoes);
+                            editarCaminhao(caminhoes, totalCaminhoes);
                             break;
                         case 4:
-                            deletarCaminhao(caminhoes, &totalCaminhoes);
+                            deletarCaminhao(&caminhoes, &totalCaminhoes, &capCaminhoes, operacoes, totalOperacoes);
                             break;
                         case 5:
-                            listarCaminhoes(caminhoes, &totalCaminhoes);
+                            listarCaminhoes(caminhoes, totalCaminhoes);
                             break;
                         case 0:
                             printf("\nVoltando ao menu principal...\n");
@@ -99,7 +100,7 @@ int main() {
 
                     switch (subEscolhaDocas) { // SUBMENU DOCAS
                         case 1:
-                            cadastrarDoca(docas, &totalDocas);
+                            cadastrarDoca(&docas, &totalDocas, &capDocas);
                             break;
                         case 2: {
                             int docaBusca;
@@ -110,7 +111,7 @@ int main() {
                                 break;
                             }
 
-                            Doca *docaEncontrada = buscarDocaPorNumero(docas, &totalDocas, docaBusca);
+                            Doca *docaEncontrada = buscarDocaPorNumero(docas, totalDocas, docaBusca);
 
                             if (docaEncontrada != NULL) {
                                 printf("\n--- Doca Encontrada ---\n");
@@ -124,14 +125,14 @@ int main() {
                             break;
                         }
                         case 3:
-                            editarDoca(docas, &totalDocas);
+                            editarDoca(docas, totalDocas);
                             break;
                         case 4:
-                            deletarDoca(docas, &totalDocas);
+                            deletarDoca(&docas, &totalDocas, &capDocas, operacoes, totalOperacoes);
                             break;
 
                         case 5:
-                            listarDocas(docas, &totalDocas);
+                            listarDocas(docas, totalDocas);
                             break;
                             
                         case 0:
@@ -144,9 +145,58 @@ int main() {
                 }
                 break;
             } 
+            
+            case 3: // OPÇÃO 3: OPERAÇÃO
+            {
+                int subEscolhaOp = -1; 
+                while (subEscolhaOp != 0) {
+                    exibirSubMenuOperacoes();
+                    printf("\nEscolha uma opcao: ");
+                    if (scanf("%d", &subEscolhaOp) != 1) {
+                        printf("\nOpcao invalida (digite um numero)!\n");
+                        limparBuffer();
+                        subEscolhaOp = -1;
+                        continue;
+                    }
+                    
+                    switch(subEscolhaOp){
+                        case 1:
+                            cadastrarOperacao(&operacoes, &totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas, &capOperacoes);
+                            break;
+                        case 2:
+                            bucarOperacao(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+                            break;
+                        case 3:
+                            editarOperacao(operacoes, totalOperacoes);
+                            break;
+                        case 4:
+                            deletarOperacao(operacoes, &totalOperacoes);
+                            break;
+                        case 5:
+                            listarOperacoes(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+                            break;
+                        case 0:
+                            printf("\nVoltando ao menu principal...\n");
+                            break;
+                        default:
+                            printf("\nEscolha invalida!\n");
+                            break;
+
+                    }
+                }
+                break;
+            }
+            case 0:
+                printf("\nSaindo do sistema. Ate logo!\n");
+                free(caminhoes);
+                free(docas);
+                free(operacoes);
+                break;
+
             default:
                 printf("Opcao invalida!\n");
                 break;
+            
         }
     }
 

@@ -3,17 +3,18 @@
 
 #include "structs.h"
 
-// Create
-void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes);
+// CREATE
+void cadastrarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminhoes);
 
-// Read
-void listarCaminhoes(Caminhao *caminhoes, int *totalCaminhoes);
-Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int *totalCaminhoes, char *placa);
+// READ
+void listarCaminhoes(Caminhao *caminhoes, int totalCaminhoes);
+Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int totalCaminhoes, char *placa);
 
-// Update
-void editarCaminhao(Caminhao *caminhoes, int *totalCaminhoes);
+// UPDATE
+void editarCaminhao(Caminhao *caminhoes, int totalCaminhoes);
 
-// Delete
-void deletarCaminhao(Caminhao *caminhoes, int *totalCaminhoes);
+// DELETE
+void deletarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminhoes,
+                     Operacao *operacoes, int totalOperacoes);
 
 #endif
