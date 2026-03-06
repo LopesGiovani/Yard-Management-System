@@ -1,0 +1,26 @@
+#ifndef OPERACOES_H
+#define OPERACOES_H
+
+#include "structs.h"
+
+//Create
+void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas, int *capOperacoes);
+
+//Retorna posição do registro
+int buscarIndicePorCodigo(Operacao *operacoes, int totalOperacoes, char *codigoOperacao);
+
+//Read
+void listarOperacoes(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+void bucarOperacao(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+
+//Update
+void editarOperacao(Operacao *operacoes, int totalOperacoes);
+
+//Delete
+void deletarOperacao(Operacao *operacoes, int *totalOperacoes);
+
+//Traduz status da operação
+const char *traduzirStatusOperacao(StatusOperacao status);
+
+
+#endif

@@ -50,7 +50,7 @@ typedef struct
     struct tm horaInicio;
     struct tm horaTermino;
     TipoDoca tipo;
-    char produto[50];
+    char carga[50];
     float pesoCarga; // Tons
     StatusOperacao status;
 } Operacao;
