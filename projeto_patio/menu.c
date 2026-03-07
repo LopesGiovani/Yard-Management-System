@@ -40,6 +40,7 @@ void exibirSubMenuOperacoes(){
     printf("3- ALTERACAO DE DADOS de Operacao\n");
     printf("4- REMOCAO de Operacao\n");
     printf("5- LISTAGEM de todas as Operacoes\n");
+    printf("6- CONSULTA FILTRADA de Operacoes\n");
     printf("\n");
     printf("0- Voltar ao Menu Principal\n");
 }

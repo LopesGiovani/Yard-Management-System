@@ -76,11 +76,7 @@ void salvarDados()
 
     printf("Dados salvos com sucesso.\n");
 }
-void carregarDados(){
-    carregarCaminhoes();
-    carregarDocas();
-    carregarOperacoes();
-}
+
 static void carregarCaminhoes()
 {
     int total;
@@ -102,7 +98,7 @@ static void carregarCaminhoes()
         caminhoes = temp;
         capCaminhoes = total + EXTRA;
     }
-    fread(caminhoes, sizeof(caminhoes), total, fp);
+    fread(caminhoes, sizeof(Caminhao), total, fp);
     totalCaminhoes = total;
     fclose(fp);
 }
@@ -128,7 +124,7 @@ static void carregarDocas()
         docas = temp;
         capDocas = total + EXTRA;
     }
-    fread(docas, sizeof(docas), total, fp);
+    fread(docas, sizeof(Doca), total, fp);
     totalDocas = total;
     fclose(fp);
 }
@@ -154,8 +150,14 @@ static void carregarOperacoes()
         operacoes = temp;
         capOperacoes = total + EXTRA;
     }
-    fread(operacoes, sizeof(operacoes), total, fp);
+    fread(operacoes, sizeof(Operacao), total, fp);
     totalOperacoes = total;
     fclose(fp);
 }
 
+void carregarDados()
+{
+    carregarCaminhoes();
+    carregarDocas();
+    carregarOperacoes();
+}
