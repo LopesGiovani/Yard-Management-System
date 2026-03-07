@@ -13,6 +13,7 @@ void limparBuffer() {
 
 int main() {
     inicializarDados();
+    carregarDados();
 
     int escolha = -1;
 
@@ -188,6 +189,7 @@ int main() {
             }
             case 0:
                 printf("\nSaindo do sistema. Ate logo!\n");
+                salvarDados();
                 free(caminhoes);
                 free(docas);
                 free(operacoes);

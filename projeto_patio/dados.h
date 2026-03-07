@@ -19,5 +19,7 @@ extern int capDocas;
 extern int capOperacoes;
 
 void inicializarDados();
+void salvarDados();
+void carregarDados();
 
 #endif
