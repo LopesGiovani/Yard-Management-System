@@ -14,8 +14,7 @@ Doca *buscarDocaPorNumero(Doca *docas, int totalDocas, int numero);
 void editarDoca(Doca *docas, int totalDocas);
 
 // Delete
-void deletarDoca(Doca **docas, int *totalDocas, int *capDocas,
-                 Operacao *operacoes, int totalOperacoes);
+void deletarDoca(Doca **docas, int *totalDocas, int *capDocas, Operacao *operacoes, int totalOperacoes);
 
 const char *traduzirTipo(TipoDoca tipo);
 const char *traduzirStatus(StatusDoca status);
