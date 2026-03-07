@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 static void limparBuffer()
 {
@@ -145,6 +146,14 @@ void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *cami
     // Status inicial
     nova.status = PENDENTE;
 
+    // Registra a Data e Hora de Chegada
+    time_t t = time(NULL);
+    nova.dataHoraChegada = *localtime(&t);
+
+    // Zera os outros tempos
+    memset(&nova.horaInicio, 0, sizeof(struct tm));
+    memset(&nova.horaTermino, 0, sizeof(struct tm));
+
     (*operacoes)[*totalOperacoes] = nova;   // coloca na posição atual
     (*totalOperacoes)++;
     printf("Operacao cadastrada com sucesso!\n");
@@ -249,6 +258,20 @@ void buscarOperacao(Operacao *operacoes, int totalOperacoes,
     printf("Carga: %s\n", op->carga);
     printf("Peso: %.2f\n", op->pesoCarga);
     printf("Status: %s\n", traduzirStatusOperacao(op->status));
+
+    char bufferTempo[50];
+    strftime(bufferTempo, sizeof(bufferTempo), "%d/%m/%Y %H:%M:%S", &op->dataHoraChegada);
+    printf("Chegada no patio: %s\n", bufferTempo);
+
+    if (op->status == ATIVA || op->status == CONCLUIDA) {
+        strftime(bufferTempo, sizeof(bufferTempo), "%d/%m/%Y %H:%M:%S", &op->horaInicio);
+        printf("Inicio da operacao: %s\n", bufferTempo);
+    }
+    
+    if (op->status == CONCLUIDA) {
+        strftime(bufferTempo, sizeof(bufferTempo), "%d/%m/%Y %H:%M:%S", &op->horaTermino);
+        printf("Termino da operacao: %s\n", bufferTempo);
+    }
 }
 
 void editarOperacao(Operacao *operacoes, int totalOperacoes)
@@ -277,6 +300,26 @@ void editarOperacao(Operacao *operacoes, int totalOperacoes)
     scanf("%f", &op->pesoCarga);
     limparBuffer();
 
+    printf("Alterar status da operacao?\n [0] PENDENTE\n [1] ATIVA (grava inicio)\n [2] CONCLUIDA (grava termino)\n [3] CANCELADA\n [4] Manter o atual\nOpcao: ");
+    int novoStatus;
+    scanf("%d", &novoStatus);
+    limparBuffer();
+
+    if (novoStatus >= 0 && novoStatus <= 3) {
+        op->status = (StatusOperacao)novoStatus;
+        time_t t = time(NULL);
+
+        if (op->status == ATIVA) {
+            op->horaInicio = *localtime(&t);
+        } else if (op->status == CONCLUIDA) {
+            op->horaTermino = *localtime(&t);
+            // se foi concluida direto sem ATUAL, por seguranca gravamos ambos
+            if (op->horaInicio.tm_year == 0) { 
+                op->horaInicio = *localtime(&t);
+            }
+        }
+    }
+
     printf("Operacao atualizada com sucesso!\n");
 }
 
@@ -304,4 +347,42 @@ void deletarOperacao(Operacao *operacoes, int *totalOperacoes)
     (*totalOperacoes)--;
 
     printf("Operacao removida com sucesso.\n");
+}
+
+void gerarRelatorio(Operacao *operacoes, int totalOperacoes,
+                    Caminhao *caminhoes, int totalCaminhoes,
+                    Doca *docas, int totalDocas)
+{
+    FILE *f = fopen("relatorio.txt", "w");
+    if (f == NULL)
+    {
+        printf("ERRO: Nao foi possivel criar relatorio.txt\n");
+        return;
+    }
+
+    fprintf(f, "=================================================\n");
+    fprintf(f, "        RELATORIO GERAL DE OPERACOES             \n");
+    fprintf(f, "=================================================\n\n");
+
+    if (totalOperacoes == 0)
+    {
+        fprintf(f, "Nenhuma operacao cadastrada no sistema.\n");
+    }
+    else
+    {
+        for (int i = 0; i < totalOperacoes; i++)
+        {
+            Operacao *op = &operacoes[i];
+            fprintf(f, "Codigo Operacao: %s\n", op->codigoOperacao);
+            fprintf(f, "Status: %s\n", traduzirStatusOperacao(op->status));
+            fprintf(f, "Tipo: %s\n", op->tipo == CARGA ? "CARGA" : "DESCARGA");
+            fprintf(f, "Produto: %s (%.2f Toneladas)\n", op->carga, op->pesoCarga);
+            fprintf(f, "Caminhao (Placa): %s\n", op->placaCaminhao);
+            fprintf(f, "Doca (Numero): %d\n", op->numeroDoca);
+            fprintf(f, "-------------------------------------------------\n");
+        }
+    }
+
+    fclose(f);
+    printf("Relatorio 'relatorio.txt' gerado com sucesso!\n");
 }

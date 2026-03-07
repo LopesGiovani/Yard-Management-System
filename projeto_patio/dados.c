@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "dados.h"
 
 Caminhao *caminhoes;
@@ -32,14 +33,45 @@ void inicializarDados()
     capDocas = EXTRA;
     capOperacoes = EXTRA;
 
-    // chamar carregarDados() para ler os .bin
-    // Por enquanto manter os dados mockados:
-    caminhoes[0] = (Caminhao){"ABC1234", "TransporteA", "CaminhaoA", "Joao Silva", 10};
-    caminhoes[1] = (Caminhao){"DEF5678", "TransporteB", "CaminhaoB", "Maria Silva", 15};
-    totalCaminhoes = 2;
-    docas[0] = (Doca){1, CARGA, LIVRE, 20.0};
-    docas[1] = (Doca){2, DESCARGA, LIVRE, 25.0};
-    totalDocas = 2;
+    // Dados iniciais (carregados apenas se nao houver .bin salvo)
+    caminhoes[0] = (Caminhao){"ABC1234", "TransporteA",  "Caminhao Bau",         "Joao Silva",   10.0};
+    caminhoes[1] = (Caminhao){"DEF5678", "TransporteB",  "Caminhao Tanque",      "Maria Santos", 15.0};
+    caminhoes[2] = (Caminhao){"GHI9012", "TransporteC",  "Caminhao Frigorifico", "Carlos Lima",  20.0};
+    caminhoes[3] = (Caminhao){"JKL3456", "TransporteD",  "Caminhao Carga Seca",  "Ana Souza",    12.0};
+    totalCaminhoes = 4;
+
+    docas[0] = (Doca){1, CARGA,    LIVRE,   20.0};
+    docas[1] = (Doca){2, DESCARGA, LIVRE,   25.0};
+    docas[2] = (Doca){3, CARGA,    OCUPADA, 18.0};
+    docas[3] = (Doca){4, DESCARGA, LIVRE,   30.0};
+    totalDocas = 4;
+
+    // Operacoes (campos de tempo zerados com calloc)
+    operacoes[0].numeroDoca = 1; operacoes[0].tipo = CARGA;
+    operacoes[0].pesoCarga = 5.0; operacoes[0].status = CONCLUIDA;
+    strcpy(operacoes[0].codigoOperacao, "OP001");
+    strcpy(operacoes[0].placaCaminhao,  "ABC1234");
+    strcpy(operacoes[0].carga,          "Eletronicos");
+
+    operacoes[1].numeroDoca = 2; operacoes[1].tipo = DESCARGA;
+    operacoes[1].pesoCarga = 8.0; operacoes[1].status = CONCLUIDA;
+    strcpy(operacoes[1].codigoOperacao, "OP002");
+    strcpy(operacoes[1].placaCaminhao,  "DEF5678");
+    strcpy(operacoes[1].carga,          "Alimentos");
+
+    operacoes[2].numeroDoca = 3; operacoes[2].tipo = CARGA;
+    operacoes[2].pesoCarga = 12.0; operacoes[2].status = ATIVA;
+    strcpy(operacoes[2].codigoOperacao, "OP003");
+    strcpy(operacoes[2].placaCaminhao,  "GHI9012");
+    strcpy(operacoes[2].carga,          "Quimicos");
+
+    operacoes[3].numeroDoca = 4; operacoes[3].tipo = DESCARGA;
+    operacoes[3].pesoCarga = 7.5; operacoes[3].status = PENDENTE;
+    strcpy(operacoes[3].codigoOperacao, "OP004");
+    strcpy(operacoes[3].placaCaminhao,  "JKL3456");
+    strcpy(operacoes[3].carga,          "Autopecas");
+
+    totalOperacoes = 4;
 }
 void salvarDados()
 {

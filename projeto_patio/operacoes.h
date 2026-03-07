@@ -25,4 +25,7 @@ const char *traduzirStatusOperacao(StatusOperacao status);
 //consulta por filtro
 void consultarOperacoesFiltradas(Operacao *operacoes, int totalOperacoes,Caminhao *caminhoes, int totalCaminhoes,Doca *docas, int totalDocas);
 
+// Gerar relatorios txt
+void gerarRelatorio(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+
 #endif

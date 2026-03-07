@@ -217,7 +217,10 @@ int main()
             }
             break;
         }
-        
+        case 4:
+            gerarRelatorio(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+            break;
+
         case 0:
             printf("\nSaindo do sistema. Ate logo!\n");
             salvarDados();
