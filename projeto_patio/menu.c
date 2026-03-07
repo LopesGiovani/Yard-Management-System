@@ -40,16 +40,19 @@ void exibirSubMenuOperacoes(){
     printf("3- ALTERACAO DE DADOS de Operacao\n");
     printf("4- REMOCAO de Operacao\n");
     printf("5- LISTAGEM de todas as Operacoes\n");
-    printf("6- CONSULTA FILTRADA de Operacoes\n");
+    printf("------- Consultas Especiais ------\n");
+    printf("6- Consultar Operacoes Ativas por Tipo\n");
+    printf("7- Consultar Historico por Placa\n");
+    printf("8- Consultar Operacoes por Doca\n");
     printf("\n");
     printf("0- Voltar ao Menu Principal\n");
 }
 
 void exibirSubMenuRelatorios(){
-    printf("\n----- Menu Relatorios -----\n\n");
-    printf("1- Filtrar por DATA\n");
-    printf("2- Filtrar por PRODUTO\n");
-    printf("3- Filtrar por DOCA\n");
+    printf("\n----- Menu Relatorios (Salvos em .txt) -----\n\n");
+    printf("1- Relatorio de Movimentacao por Transportadora (em periodo)\n");
+    printf("2- Relatorio de Movimentacao por Produto (em periodo)\n");
+    printf("3- Sumario de Ocupacao de Docas (em periodo)\n");
     printf("\n");
     printf("0- Voltar ao Menu Principal\n\n");
 }

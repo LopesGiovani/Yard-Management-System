@@ -110,15 +110,15 @@ void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *cami
         return;
     }
 
-    //CARGA
+    //PRODUTO
     do
     {
-        printf("Carga: ");
-        fgets(nova.carga, sizeof(nova.carga), stdin);
-        nova.carga[strcspn(nova.carga, "\n")] = 0;
-        if (strlen(nova.carga) == 0)
+        printf("Produto: ");
+        fgets(nova.produto, sizeof(nova.produto), stdin);
+        nova.produto[strcspn(nova.produto, "\n")] = 0;
+        if (strlen(nova.produto) == 0)
             printf("ERRO: O campo nao pode ser vazio.\n");
-    } while (strlen(nova.carga) == 0);
+    } while (strlen(nova.produto) == 0);
 
     //PESO
     do
@@ -159,53 +159,139 @@ void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *cami
     printf("Operacao cadastrada com sucesso!\n");
 }
 
-void consultarOperacoesFiltradas(Operacao *operacoes, int totalOperacoes,
-                                  Caminhao *caminhoes, int totalCaminhoes,
-                                  Doca *docas, int totalDocas)
+void consultarAtivasPorTipo(Operacao *operacoes, int totalOperacoes, 
+                            Caminhao *caminhoes, int totalCaminhoes, 
+                            Doca *docas, int totalDocas)
 {
-    printf("\nFiltrar por:\n");
-    printf("  1 - Placa do Caminhao\n");
-    printf("  2 - Numero da Doca\n");
-    printf("  3 - Status\n");
-    printf("Opcao: ");
-
-    int opcao;
-    scanf("%d", &opcao);
+    printf("\n=== Consultar Operacoes Ativas por Tipo ===\n");
+    printf("Digite o tipo [0=CARGA, 1=DESCARGA]: ");
+    int tipoFiltrado;
+    scanf("%d", &tipoFiltrado);
+    limparBuffer();
 
     int encontrou = 0;
-
-    for (int i = 0; i < totalOperacoes; i++)
-    {
+    for (int i = 0; i < totalOperacoes; i++) {
         Operacao *op = &operacoes[i];
-        int exibir = 0;
+        
+        // Filtra por tipo, e que nao tenha horaTermino registrada (ou seja, ano = 0 e esta ativa ou pendente)
+        if (op->tipo == (TipoDoca)tipoFiltrado && op->status != CONCLUIDA && op->status != CANCELADA) {
+            
+            // Busca dados extras nas outras structs (embora o trabalho peca 1 relacao por vez, mostramos os que pudermos)
+            char nomeMotorista[50] = "Nao Encontrado";
+            for(int j=0; j<totalCaminhoes; j++) {
+                if(strcmp(caminhoes[j].placa, op->placaCaminhao) == 0) {
+                    strcpy(nomeMotorista, caminhoes[j].motoristaNome);
+                    break;
+                }
+            }
 
-        if (opcao == 1) {
-            char placa[8];
-            printf("Placa: "); scanf("%7s", placa);
-            if (strcmp(op->placaCaminhao, placa) == 0) exibir = 1;
-        }
-        else if (opcao == 2) {
-            int numDoca;
-            printf("Numero da doca: "); scanf("%d", &numDoca);
-            if (op->numeroDoca == numDoca) exibir = 1;
-        }
-        else if (opcao == 3) {
-            printf("Status (PENDENTE[0] ATIVA[1] CONCLUIDA[2] CANCELADA[3]): ");
-            int st; scanf("%d", &st);
-            if (op->status == (StatusOperacao)st) exibir = 1;
-        }
+            char strChegada[30];
+            strftime(strChegada, sizeof(strChegada), "%d/%m %H:%M", &op->dataHoraChegada);
 
-        if (exibir) {
-            printf("\n  Codigo : %s | Placa: %s | Doca: %d | Status: %s\n",
-                   op->codigoOperacao, op->placaCaminhao,
-                   op->numeroDoca, traduzirStatusOperacao(op->status));
+            char strInicio[30] = "Nao Iniciou";
+            if (op->status == ATIVA) {
+                strftime(strInicio, sizeof(strInicio), "%H:%M", &op->horaInicio);
+            }
+
+            printf("\n%s | %s | %s | %s | %.2fkg | Placa: %s | Mot: %s | Doca: %d\n",
+                op->codigoOperacao, strChegada, strInicio, op->produto, op->pesoCarga, 
+                op->placaCaminhao, nomeMotorista, op->numeroDoca);
+            
             encontrou = 1;
-            // se quiser exibir dados do caminhao/doca associados, busca aqui
+        }
+    }
+    
+    if (!encontrou) printf("Nenhuma operacao ativa encontrada para este tipo.\n");
+}
+
+void consultarHistoricoPorPlaca(Operacao *operacoes, int totalOperacoes, 
+                                Caminhao *caminhoes, int totalCaminhoes, 
+                                Doca *docas, int totalDocas)
+{
+    printf("\n=== Consultar Historico de Operacoes por Placa ===\n");
+    printf("Digite a Placa: ");
+    char placaBusca[8];
+    scanf("%7s", placaBusca);
+    limparBuffer();
+
+    // Busca o motorista
+    char nomeMotorista[50] = "Desconhecido";
+    for(int j=0; j<totalCaminhoes; j++) {
+        if(strcmp(caminhoes[j].placa, placaBusca) == 0) {
+            strcpy(nomeMotorista, caminhoes[j].motoristaNome);
+            break;
         }
     }
 
-    if (!encontrou)
-        printf("Nenhuma operacao encontrada com esse filtro.\n");
+    printf("Historico para Placa %s, Motorista: %s\n", placaBusca, nomeMotorista);
+
+    int encontrou = 0;
+    for (int i = 0; i < totalOperacoes; i++) {
+        Operacao *op = &operacoes[i];
+
+        if (strcmp(op->placaCaminhao, placaBusca) == 0) {
+            char strChegada[30], strInicio[30], strTermino[30];
+            strftime(strChegada, sizeof(strChegada), "%d/%m %H:%M", &op->dataHoraChegada);
+            
+            if(op->status == ATIVA || op->status == CONCLUIDA) 
+                strftime(strInicio, sizeof(strInicio), "%H:%M", &op->horaInicio);
+            else strcpy(strInicio, "---");
+
+            if(op->status == CONCLUIDA) 
+                strftime(strTermino, sizeof(strTermino), "%H:%M", &op->horaTermino);
+            else strcpy(strTermino, "---");
+
+
+            printf("%s | Chegou: %s | Inicio: %s | Fim: %s | %s | %s | %.2fkg | Doca: %d\n",
+                op->codigoOperacao, strChegada, strInicio, strTermino,
+                op->tipo == CARGA ? "Carga":"Descarga", 
+                op->produto, op->pesoCarga, op->numeroDoca);
+            
+            encontrou = 1;
+        }
+    }
+    
+    if (!encontrou) printf("Nenhuma operacao encontrada para a placa %s.\n", placaBusca);
+}
+
+void consultarOperacoesPorDoca(Operacao *operacoes, int totalOperacoes, 
+                               Caminhao *caminhoes, int totalCaminhoes, 
+                               Doca *docas, int totalDocas)
+{
+    printf("\n=== Consultar Operacoes por Doca Especifica ===\n");
+    printf("Digite o Numero da Doca: ");
+    int numDocaBusca;
+    scanf("%d", &numDocaBusca);
+    limparBuffer();
+
+    printf("Operacoes da Doca %d:\n", numDocaBusca);
+
+    int encontrou = 0;
+    for (int i = 0; i < totalOperacoes; i++) {
+        Operacao *op = &operacoes[i];
+
+        if (op->numeroDoca == numDocaBusca) {
+            char strChegada[30];
+            strftime(strChegada, sizeof(strChegada), "%d/%m %H:%M", &op->dataHoraChegada);
+
+            char transp[50] = "Desconhecida";
+            for(int j=0; j<totalCaminhoes; j++) {
+                if(strcmp(caminhoes[j].placa, op->placaCaminhao) == 0) {
+                    strcpy(transp, caminhoes[j].transportadora);
+                    break;
+                }
+            }
+
+            printf("%s | %s | %s | %s | %.2fkg | Placa: %s | Transp: %s\n",
+                op->codigoOperacao, traduzirStatusOperacao(op->status),
+                strChegada, op->produto, op->pesoCarga,
+                op->placaCaminhao, transp);
+            
+            encontrou = 1;
+        }
+    }
+    
+    if (!encontrou) printf("Nenhuma operacao encontrada para a doca %d.\n", numDocaBusca);
 }
 
 void listarOperacoes(Operacao *operacoes, int totalOperacoes,
@@ -225,7 +311,7 @@ void listarOperacoes(Operacao *operacoes, int totalOperacoes,
         printf("\nCodigo: %s", operacoes[i].codigoOperacao);
         printf("\nPlaca Caminhao: %s", operacoes[i].placaCaminhao);
         printf("\nNumero Doca: %d", operacoes[i].numeroDoca);
-        printf("\nCarga: %s", operacoes[i].carga);
+        printf("\nProduto: %s", operacoes[i].produto);
         printf("\nPeso: %.2f toneladas", operacoes[i].pesoCarga);
         printf("\nStatus: %s\n", traduzirStatusOperacao(operacoes[i].status));
     }
@@ -255,7 +341,7 @@ void buscarOperacao(Operacao *operacoes, int totalOperacoes,
     printf("Codigo: %s\n", op->codigoOperacao);
     printf("Placa: %s\n", op->placaCaminhao);
     printf("Doca: %d\n", op->numeroDoca);
-    printf("Carga: %s\n", op->carga);
+    printf("Produto: %s\n", op->produto);
     printf("Peso: %.2f\n", op->pesoCarga);
     printf("Status: %s\n", traduzirStatusOperacao(op->status));
 
@@ -292,9 +378,9 @@ void editarOperacao(Operacao *operacoes, int totalOperacoes)
 
     Operacao *op = &operacoes[indice];
 
-    printf("Nova carga: ");
-    fgets(op->carga, sizeof(op->carga), stdin);
-    op->carga[strcspn(op->carga, "\n")] = 0;
+    printf("Novo produto: ");
+    fgets(op->produto, sizeof(op->produto), stdin);
+    op->produto[strcspn(op->produto, "\n")] = 0;
 
     printf("Novo peso: ");
     scanf("%f", &op->pesoCarga);
@@ -323,7 +409,7 @@ void editarOperacao(Operacao *operacoes, int totalOperacoes)
     printf("Operacao atualizada com sucesso!\n");
 }
 
-void deletarOperacao(Operacao *operacoes, int *totalOperacoes)
+void deletarOperacao(Operacao **operacoes, int *totalOperacoes, int *capOperacoes)
 {
     char codigo[10];
 
@@ -331,7 +417,7 @@ void deletarOperacao(Operacao *operacoes, int *totalOperacoes)
     scanf("%9s", codigo);
     limparBuffer();
 
-    int indice = buscarIndicePorCodigo(operacoes, *totalOperacoes, codigo);
+    int indice = buscarIndicePorCodigo(*operacoes, *totalOperacoes, codigo);
 
     if (indice == -1)
     {
@@ -341,48 +427,268 @@ void deletarOperacao(Operacao *operacoes, int *totalOperacoes)
 
     for (int i = indice; i < *totalOperacoes - 1; i++)
     {
-        operacoes[i] = operacoes[i + 1];
+        (*operacoes)[i] = (*operacoes)[i + 1];
     }
 
     (*totalOperacoes)--;
 
-    printf("Operacao removida com sucesso.\n");
-}
-
-void gerarRelatorio(Operacao *operacoes, int totalOperacoes,
-                    Caminhao *caminhoes, int totalCaminhoes,
-                    Doca *docas, int totalDocas)
-{
-    FILE *f = fopen("relatorio.txt", "w");
-    if (f == NULL)
+    int livres = *capOperacoes - *totalOperacoes;
+    if (livres > EXTRA)
     {
-        printf("ERRO: Nao foi possivel criar relatorio.txt\n");
-        return;
-    }
-
-    fprintf(f, "=================================================\n");
-    fprintf(f, "        RELATORIO GERAL DE OPERACOES             \n");
-    fprintf(f, "=================================================\n\n");
-
-    if (totalOperacoes == 0)
-    {
-        fprintf(f, "Nenhuma operacao cadastrada no sistema.\n");
-    }
-    else
-    {
-        for (int i = 0; i < totalOperacoes; i++)
+        int novaCap = *totalOperacoes + EXTRA;
+        Operacao *temp = realloc(*operacoes, novaCap * sizeof(Operacao));
+        if (temp != NULL)
         {
-            Operacao *op = &operacoes[i];
-            fprintf(f, "Codigo Operacao: %s\n", op->codigoOperacao);
-            fprintf(f, "Status: %s\n", traduzirStatusOperacao(op->status));
-            fprintf(f, "Tipo: %s\n", op->tipo == CARGA ? "CARGA" : "DESCARGA");
-            fprintf(f, "Produto: %s (%.2f Toneladas)\n", op->carga, op->pesoCarga);
-            fprintf(f, "Caminhao (Placa): %s\n", op->placaCaminhao);
-            fprintf(f, "Doca (Numero): %d\n", op->numeroDoca);
-            fprintf(f, "-------------------------------------------------\n");
+            *operacoes = temp;
+            *capOperacoes = novaCap;
         }
     }
 
+    printf("Operacao removida com sucesso.\n");
+}
+
+void gerarRelatorioTransportadora(Operacao *operacoes, int totalOperacoes,
+                                  Caminhao *caminhoes, int totalCaminhoes,
+                                  Doca *docas, int totalDocas)
+{
+    printf("\n=== Relatorio por Transportadora (Salvo em TXT) ===\n");
+    printf("Digite o nome da Transportadora: ");
+    limparBuffer();
+    char transpBusca[50];
+    fgets(transpBusca, sizeof(transpBusca), stdin);
+    transpBusca[strcspn(transpBusca, "\n")] = 0;
+
+    char strDataIni[15], strDataFim[15];
+    printf("Data Inicial (DD/MM/AAAA): ");
+    scanf("%14s", strDataIni);
+    limparBuffer();
+    struct tm tm_ini = {0};
+    sscanf(strDataIni, "%d/%d/%d", &tm_ini.tm_mday, &tm_ini.tm_mon, &tm_ini.tm_year);
+    tm_ini.tm_mon -= 1;
+    tm_ini.tm_year -= 1900;
+    time_t time_ini = mktime(&tm_ini);
+
+    printf("Data Final (DD/MM/AAAA): ");
+    scanf("%14s", strDataFim);
+    limparBuffer();
+    struct tm tm_fim = {0};
+    sscanf(strDataFim, "%d/%d/%d", &tm_fim.tm_mday, &tm_fim.tm_mon, &tm_fim.tm_year);
+    tm_fim.tm_mon -= 1;
+    tm_fim.tm_year -= 1900;
+    tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
+    time_t time_fim = mktime(&tm_fim);
+
+    FILE *f = fopen("Relatorio_Transportadora.txt", "w");
+    if (f == NULL) {
+        printf("ERRO: Nao foi possivel criar o arquivo.\n");
+        return;
+    }
+
+    fprintf(f, "==================================================================\n");
+    fprintf(f, "RELATÓRIO DE MOVIMENTAÇÃO - SISTEMA DE GESTÃO DE PÁTIO E DOCAS\n");
+    fprintf(f, "==================================================================\n");
+    fprintf(f, "Transportadora: %s\n\n", transpBusca);
+
+    int count = 0;
+    for (int i = 0; i < totalOperacoes; i++) {
+        Operacao *op = &operacoes[i];
+
+        // Busca o caminhao pra ver se pertence a Transportadora
+        int pertence = 0;
+        char placa[8] = "";
+        char motorista[50] = "";
+        char veiculo[50] = "";
+
+        for(int j=0; j<totalCaminhoes; j++) {
+            if(strcmp(caminhoes[j].placa, op->placaCaminhao) == 0) {
+                if(strcasecmp(caminhoes[j].transportadora, transpBusca) == 0 || strcmp(caminhoes[j].transportadora, transpBusca) == 0) {
+                    pertence = 1;
+                    strcpy(placa, caminhoes[j].placa);
+                    strcpy(motorista, caminhoes[j].motoristaNome);
+                    strcpy(veiculo, caminhoes[j].tipoVeiculo);
+                }
+                break;
+            }
+        }
+
+        if (pertence) {
+            time_t time_op = mktime(&op->dataHoraChegada);
+            if (difftime(time_op, time_ini) >= 0 && difftime(time_fim, time_op) >= 0) {
+                char strChegada[30];
+                strftime(strChegada, sizeof(strChegada), "%d/%m/%Y %H:%M", &op->dataHoraChegada);
+
+                // Pega dados da Doca
+                char tipoDocaStr[20] = "Mista";
+                float capDoca = 0.0;
+                for(int k=0; k<totalDocas; k++) {
+                    if(docas[k].numeroDoca == op->numeroDoca) {
+                        strcpy(tipoDocaStr, docas[k].tipo == CARGA ? "Carga" : "Descarga");
+                        capDoca = docas[k].capacidadeMaxima;
+                        break;
+                    }
+                }
+
+                fprintf(f, "[OPERAÇÃO: %s]\n", op->codigoOperacao);
+                fprintf(f, " Data Chegada: %s\n", strChegada);
+                fprintf(f, " Tipo: %s\n", op->tipo == CARGA ? "Carga" : "Descarga");
+                fprintf(f, " Produto: %s\n", op->produto);
+                fprintf(f, " Peso: %.2f kg\n", op->pesoCarga);
+                fprintf(f, " Doca: Doca %d (Tipo: %s, Cap: %.2ft)\n", op->numeroDoca, tipoDocaStr, capDoca);
+                fprintf(f, " Caminhão:\n");
+                fprintf(f, "  Placa: %s\n", placa);
+                fprintf(f, "  Motorista: %s\n", motorista);
+                fprintf(f, "  Veículo: %s\n", veiculo);
+                fprintf(f, "\n");
+                count++;
+            }
+        }
+    }
+
+    if (count == 0) fprintf(f, "Nenhuma operacao encontrada para a transportadora %s no periodo.\n", transpBusca);
+
     fclose(f);
-    printf("Relatorio 'relatorio.txt' gerado com sucesso!\n");
+    printf("Relatorio 'Relatorio_Transportadora.txt' gerado com sucesso! (%d registros)\n", count);
+}
+
+void gerarRelatorioProduto(Operacao *operacoes, int totalOperacoes,
+                           Caminhao *caminhoes, int totalCaminhoes,
+                           Doca *docas, int totalDocas)
+{
+    printf("\n=== Relatorio por Produto (Salvo em TXT) ===\n");
+    printf("Digite o nome do Produto: ");
+    limparBuffer();
+    char prodBusca[50];
+    fgets(prodBusca, sizeof(prodBusca), stdin);
+    prodBusca[strcspn(prodBusca, "\n")] = 0;
+
+    char strDataIni[15], strDataFim[15];
+    printf("Data Inicial (DD/MM/AAAA): ");
+    scanf("%14s", strDataIni);
+    limparBuffer();
+    struct tm tm_ini = {0};
+    sscanf(strDataIni, "%d/%d/%d", &tm_ini.tm_mday, &tm_ini.tm_mon, &tm_ini.tm_year);
+    tm_ini.tm_mon -= 1;
+    tm_ini.tm_year -= 1900;
+    time_t time_ini = mktime(&tm_ini);
+
+    printf("Data Final (DD/MM/AAAA): ");
+    scanf("%14s", strDataFim);
+    limparBuffer();
+    struct tm tm_fim = {0};
+    sscanf(strDataFim, "%d/%d/%d", &tm_fim.tm_mday, &tm_fim.tm_mon, &tm_fim.tm_year);
+    tm_fim.tm_mon -= 1;
+    tm_fim.tm_year -= 1900;
+    tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
+    time_t time_fim = mktime(&tm_fim);
+
+    FILE *f = fopen("Relatorio_Produto.txt", "w");
+    if (f == NULL) {
+        printf("ERRO: Nao foi possivel criar o arquivo.\n");
+        return;
+    }
+
+    fprintf(f, "==================================================================\n");
+    fprintf(f, "RELATÓRIO DE MOVIMENTAÇÃO POR PRODUTO\n");
+    fprintf(f, "==================================================================\n");
+    fprintf(f, "Produto: %s\n\n", prodBusca);
+
+    int count = 0;
+    for (int i = 0; i < totalOperacoes; i++) {
+        Operacao *op = &operacoes[i];
+
+        if (strcasecmp(op->produto, prodBusca) == 0 || strcmp(op->produto, prodBusca) == 0) {
+            time_t time_op = mktime(&op->dataHoraChegada);
+            if (difftime(time_op, time_ini) >= 0 && difftime(time_fim, time_op) >= 0) {
+                char strChegada[30];
+                strftime(strChegada, sizeof(strChegada), "%d/%m/%Y %H:%M", &op->dataHoraChegada);
+
+                char placa[8] = "";
+                char transp[50] = "";
+                for(int j=0; j<totalCaminhoes; j++) {
+                    if(strcmp(caminhoes[j].placa, op->placaCaminhao) == 0) {
+                        strcpy(placa, caminhoes[j].placa);
+                        strcpy(transp, caminhoes[j].transportadora);
+                        break;
+                    }
+                }
+
+                fprintf(f, "[OPERAÇÃO: %s | TIPO: %s]\n", op->codigoOperacao, op->tipo == CARGA ? "Carga" : "Descarga");
+                fprintf(f, " Data Chegada: %s\n", strChegada);
+                fprintf(f, " Peso: %.2f kg\n", op->pesoCarga);
+                fprintf(f, " Doca: Doca %d\n", op->numeroDoca);
+                fprintf(f, " Caminhão:\n");
+                fprintf(f, "  Placa: %s\n", placa);
+                fprintf(f, "  Transportadora: %s\n", transp);
+                fprintf(f, "\n");
+                count++;
+            }
+        }
+    }
+
+    if (count == 0) fprintf(f, "Nenhuma operacao encontrada para o produto %s.\n", prodBusca);
+
+    fclose(f);
+    printf("Relatorio 'Relatorio_Produto.txt' gerado com sucesso! (%d registros)\n", count);
+}
+
+void gerarRelatorioSumarioDocas(Operacao *operacoes, int totalOperacoes,
+                                Caminhao *caminhoes, int totalCaminhoes,
+                                Doca *docas, int totalDocas)
+{
+    printf("\n=== Sumario de Ocupacao de Docas (Salvo em TXT) ===\n");
+    printf("Sumarizando dados gerais de operacao...\n");
+
+    char strDataIni[15], strDataFim[15];
+    printf("Data Inicial (DD/MM/AAAA): ");
+    scanf("%14s", strDataIni);
+    limparBuffer();
+    struct tm tm_ini = {0};
+    sscanf(strDataIni, "%d/%d/%d", &tm_ini.tm_mday, &tm_ini.tm_mon, &tm_ini.tm_year);
+    tm_ini.tm_mon -= 1;
+    tm_ini.tm_year -= 1900;
+    time_t time_ini = mktime(&tm_ini);
+
+    printf("Data Final (DD/MM/AAAA): ");
+    scanf("%14s", strDataFim);
+    limparBuffer();
+    struct tm tm_fim = {0};
+    sscanf(strDataFim, "%d/%d/%d", &tm_fim.tm_mday, &tm_fim.tm_mon, &tm_fim.tm_year);
+    tm_fim.tm_mon -= 1;
+    tm_fim.tm_year -= 1900;
+    tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
+    time_t time_fim = mktime(&tm_fim);
+
+    FILE *f = fopen("Relatorio_Docas.txt", "w");
+    if (f == NULL) {
+        printf("ERRO: Nao foi possivel criar o arquivo.\n");
+        return;
+    }
+
+    fprintf(f, "==================================================================\n");
+    fprintf(f, "RELATÓRIO DE OCUPAÇÃO DE DOCAS (SUMÁRIO GERAL)\n");
+    fprintf(f, "==================================================================\n\n");
+
+    for (int d = 0; d < totalDocas; d++) {
+        Doca *doca = &docas[d];
+        int numOps = 0;
+        float totalPeso = 0.0;
+
+        for (int i = 0; i < totalOperacoes; i++) {
+            if (operacoes[i].numeroDoca == doca->numeroDoca) {
+                time_t time_op = mktime(&operacoes[i].dataHoraChegada);
+                if (difftime(time_op, time_ini) >= 0 && difftime(time_fim, time_op) >= 0) {
+                    numOps++;
+                    totalPeso += operacoes[i].pesoCarga;
+                }
+            }
+        }
+
+        fprintf(f, "[DOCA: %d]\n", doca->numeroDoca);
+        fprintf(f, " Tipo: %s\n", doca->tipo == CARGA ? "Carga" : "Descarga");
+        fprintf(f, " Operações totais registradas: %d\n", numOps);
+        fprintf(f, " Peso total movimentado: %.1f Toneladas\n\n", totalPeso);
+    }
+
+    fclose(f);
+    printf("Relatorio 'Relatorio_Docas.txt' gerado com sucesso! (Analise de %d docas)\n", totalDocas);
 }

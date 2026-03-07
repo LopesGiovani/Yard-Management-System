@@ -8,7 +8,7 @@ void cadastrarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminh
 
 // READ
 void listarCaminhoes(Caminhao *caminhoes, int totalCaminhoes);
-Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int totalCaminhoes, char *placa);
+int buscarCaminhaoPorPlaca(Caminhao *caminhoes, int totalCaminhoes, char *placa);
 
 // UPDATE
 void editarCaminhao(Caminhao *caminhoes, int totalCaminhoes);

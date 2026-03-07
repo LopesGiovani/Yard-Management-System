@@ -17,15 +17,19 @@ void buscarOperacao(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes
 void editarOperacao(Operacao *operacoes, int totalOperacoes); 
 
 //Delete
-void deletarOperacao(Operacao *operacoes, int *totalOperacoes);
+void deletarOperacao(Operacao **operacoes, int *totalOperacoes, int *capOperacoes);
 
 //Traduz status da operação
 const char *traduzirStatusOperacao(StatusOperacao status);
 
-//consulta por filtro
-void consultarOperacoesFiltradas(Operacao *operacoes, int totalOperacoes,Caminhao *caminhoes, int totalCaminhoes,Doca *docas, int totalDocas);
+// Consultas Especificas
+void consultarAtivasPorTipo(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+void consultarHistoricoPorPlaca(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+void consultarOperacoesPorDoca(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
 
 // Gerar relatorios txt
-void gerarRelatorio(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+void gerarRelatorioTransportadora(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+void gerarRelatorioProduto(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+void gerarRelatorioSumarioDocas(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
 
 #endif

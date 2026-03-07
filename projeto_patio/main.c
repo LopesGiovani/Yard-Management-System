@@ -63,10 +63,11 @@ int main()
                     scanf("%7s", placaBusca);
                     limparBuffer();
 
-                    Caminhao *caminhaoEncontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaBusca);
+                    int caminhaoIdx = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaBusca);
 
-                    if (caminhaoEncontrado != NULL)
+                    if (caminhaoIdx != -1)
                     {
+                        Caminhao *caminhaoEncontrado = &caminhoes[caminhaoIdx];
                         printf("\nCaminhao encontrado!\n");
                         printf("Transportadora: %s\n", caminhaoEncontrado->transportadora);
                         printf("Nome do motorista: %s\n", caminhaoEncontrado->motoristaNome);
@@ -131,10 +132,11 @@ int main()
                         break;
                     }
 
-                    Doca *docaEncontrada = buscarDocaPorNumero(docas, totalDocas, docaBusca);
+                    int docaIdx = buscarDocaPorNumero(docas, totalDocas, docaBusca);
 
-                    if (docaEncontrada != NULL)
+                    if (docaIdx != -1)
                     {
+                        Doca *docaEncontrada = &docas[docaIdx];
                         printf("\n--- Doca Encontrada ---\n");
                         printf("Numero: %d\n", docaEncontrada->numeroDoca);
                         printf("Capacidade: %.2f Ton\n", docaEncontrada->capacidadeMaxima);
@@ -196,16 +198,19 @@ int main()
                     editarOperacao(operacoes, totalOperacoes);
                     break;
                 case 4:
-                    deletarOperacao(operacoes, &totalOperacoes);
+                    deletarOperacao(&operacoes, &totalOperacoes, &capOperacoes);
                     break;
                 case 5:
                     listarOperacoes(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
                     break;
-
                 case 6:
-                    consultarOperacoesFiltradas(operacoes, totalOperacoes,
-                                                caminhoes, totalCaminhoes,
-                                                docas, totalDocas);
+                    consultarAtivasPorTipo(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+                    break;
+                case 7:
+                    consultarHistoricoPorPlaca(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+                    break;
+                case 8:
+                    consultarOperacoesPorDoca(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
                     break;
                 case 0:
                     printf("\nVoltando ao menu principal...\n");
@@ -217,9 +222,42 @@ int main()
             }
             break;
         }
-        case 4:
-            gerarRelatorio(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+        case 4: // OPÇÃO 4: RELATORIOS
+        {
+            int subEscolhaRel = -1;
+            while (subEscolhaRel != 0)
+            {
+                exibirSubMenuRelatorios();
+                printf("\nEscolha uma opcao: ");
+                if (scanf("%d", &subEscolhaRel) != 1)
+                {
+                    printf("\nOpcao invalida (digite um numero)!\n");
+                    limparBuffer();
+                    subEscolhaRel = -1;
+                    continue;
+                }
+
+                switch (subEscolhaRel)
+                {
+                case 1:
+                    gerarRelatorioTransportadora(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+                    break;
+                case 2:
+                    gerarRelatorioProduto(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+                    break;
+                case 3:
+                    gerarRelatorioSumarioDocas(operacoes, totalOperacoes, caminhoes, totalCaminhoes, docas, totalDocas);
+                    break;
+                case 0:
+                    printf("\nVoltando ao menu principal...\n");
+                    break;
+                default:
+                    printf("\nEscolha invalida!\n");
+                    break;
+                }
+            }
             break;
+        }
 
         case 0:
             printf("\nSaindo do sistema. Ate logo!\n");

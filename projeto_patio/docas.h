@@ -8,7 +8,7 @@ void cadastrarDoca(Doca **docas, int *totalDocas, int *capDocas);
 
 // Read
 void listarDocas(Doca *docas, int totalDocas);
-Doca *buscarDocaPorNumero(Doca *docas, int totalDocas, int numero);
+int buscarDocaPorNumero(Doca *docas, int totalDocas, int numero);
 
 // Update
 void editarDoca(Doca *docas, int totalDocas);

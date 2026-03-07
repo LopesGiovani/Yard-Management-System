@@ -36,7 +36,7 @@ void cadastrarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminh
     fgets(novo.placa, sizeof(novo.placa), stdin);
     novo.placa[strcspn(novo.placa, "\n")] = 0;
 
-    if (buscarCaminhaoPorPlaca(*caminhoes, *totalCaminhoes, novo.placa) != NULL)
+    if (buscarCaminhaoPorPlaca(*caminhoes, *totalCaminhoes, novo.placa) != -1)
     {
         printf("ERRO: Ja existe um caminhao cadastrado com esta placa.\n");
         return;
@@ -106,15 +106,15 @@ void listarCaminhoes(Caminhao *caminhoes, int totalCaminhoes)
     }
 }
 
-Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int totalCaminhoes, char *placa)
+int buscarCaminhaoPorPlaca(Caminhao *caminhoes, int totalCaminhoes, char *placa)
 {
     for (int i = 0; i < totalCaminhoes; i++)
     {
         if (strcmp((caminhoes + i)->placa, placa) == 0)
-            return (caminhoes + i);
+            return i;
     }
 
-    return NULL;
+    return -1;
 }
 
 void editarCaminhao(Caminhao *caminhoes, int totalCaminhoes)
@@ -126,13 +126,15 @@ void editarCaminhao(Caminhao *caminhoes, int totalCaminhoes)
     fgets(placaTemp, sizeof(placaTemp), stdin);
     placaTemp[strcspn(placaTemp, "\n")] = 0;
 
-    Caminhao *encontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
+    int indiceEncontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
 
-    if (encontrado == NULL)
+    if (indiceEncontrado == -1)
     {
         printf("ERRO: Caminhao nao encontrado.\n");
         return;
     }
+
+    Caminhao *encontrado = &caminhoes[indiceEncontrado];
 
     printf("Editando caminhao da placa %s\n", placaTemp);
     

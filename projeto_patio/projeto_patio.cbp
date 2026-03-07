@@ -50,6 +50,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="menu.h" />
+		<Unit filename="operacoes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="operacoes.h" />
 		<Unit filename="structs.h" />
 		<Extensions />
 	</Project>

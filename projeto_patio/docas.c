@@ -30,7 +30,7 @@ void cadastrarDoca(Doca **docas, int *totalDocas, int *capDocas)
     scanf("%d", &novo.numeroDoca);
     limparBuffer();
 
-    if (buscarDocaPorNumero(*docas, *totalDocas, novo.numeroDoca) != NULL)
+    if (buscarDocaPorNumero(*docas, *totalDocas, novo.numeroDoca) != -1)
     {
         printf("ERRO: Ja existe uma doca cadastrada com este numero.\n");
         return;
@@ -151,12 +151,14 @@ void editarDoca(Doca *docas, int totalDocas)
     scanf("%d", &numero);
     limparBuffer();
 
-    Doca *doca = buscarDocaPorNumero(docas, totalDocas, numero);
-    if (doca == NULL)
+    int indice = buscarDocaPorNumero(docas, totalDocas, numero);
+    if (indice == -1)
     {
         printf("ERRO: Doca com numero %d nao encontrada.\n", numero);
         return;
     }
+
+    Doca *doca = &docas[indice];
 
     do
     {
@@ -189,16 +191,16 @@ void editarDoca(Doca *docas, int totalDocas)
     printf("Doca editada com sucesso!\n");
 }
 
-Doca *buscarDocaPorNumero(Doca *docas, int totalDocas, int numero)
+int buscarDocaPorNumero(Doca *docas, int totalDocas, int numero)
 {
     for (int i = 0; i < totalDocas; i++)
     {
         if ((docas + i)->numeroDoca == numero)
         {
-            return (docas + i);
+            return i;
         }
     }
-    return NULL;
+    return -1;
 }
 
 const char *traduzirTipo(TipoDoca tipo)
