@@ -169,7 +169,7 @@ void salvarDados()
     printf("Dados salvos com sucesso.\n");
 }
 
-static void carregarCaminhoes()
+void carregarCaminhoes()
 {
     int total;
     FILE *fp = fopen("caminhoes.bin", "rb");
@@ -195,7 +195,7 @@ static void carregarCaminhoes()
     fclose(fp);
 }
 
-static void carregarDocas()
+void carregarDocas()
 {
     int total;
     FILE *fp = fopen("docas.bin", "rb");
@@ -221,7 +221,7 @@ static void carregarDocas()
     fclose(fp);
 }
 
-static void carregarOperacoes()
+void carregarOperacoes()
 {
     int total;
     FILE *fp = fopen("operacoes.bin", "rb");

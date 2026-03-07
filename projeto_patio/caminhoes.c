@@ -4,13 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-// 'static' torna a funcao visivel apenas neste arquivo, evitando conflito de nomes com outros modulos (erro de linker)
-static void limparBuffer()
-{
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
 void cadastrarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminhoes)
 {
 
@@ -156,6 +149,28 @@ void editarCaminhao(Caminhao *caminhoes, int totalCaminhoes)
     {
         novoMotorista[strcspn(novoMotorista, "\n")] = 0;
         strcpy(encontrado->motoristaNome, novoMotorista);
+    }
+
+    char novoTipo[50];
+    printf("Novo tipo de veiculo (Enter mantem '%s'): ", encontrado->tipoVeiculo);
+
+    fgets(novoTipo, sizeof(novoTipo), stdin);
+    if (novoTipo[0] != '\n')
+    {
+        novoTipo[strcspn(novoTipo, "\n")] = 0;
+        strcpy(encontrado->tipoVeiculo, novoTipo);
+    }
+
+    char entradaCap[20];
+    printf("Nova capacidade de carga em toneladas (Enter mantem '%.2f'): ", encontrado->capacidadeCarga);
+    fgets(entradaCap, sizeof(entradaCap), stdin);
+    if (entradaCap[0] != '\n')
+    {
+        float novaCap;
+        if (sscanf(entradaCap, "%f", &novaCap) == 1 && novaCap > 0)
+            encontrado->capacidadeCarga = novaCap;
+        else
+            printf("Valor invalido, capacidade mantida.\n");
     }
 
     printf("Caminhao atualizado!\n");

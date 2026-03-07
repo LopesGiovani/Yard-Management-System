@@ -21,5 +21,6 @@ extern int capOperacoes;
 void inicializarDados();
 void salvarDados();
 void carregarDados();
+void limparBuffer();
 
 #endif

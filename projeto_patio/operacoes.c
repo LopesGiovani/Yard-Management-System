@@ -5,13 +5,26 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 
-static void limparBuffer()
+// Compara duas strings ignorando maiusculas/minusculas
+// Retorna 0 se forem iguais, 1 se forem diferentes
+int compararIgnoreCase(const char *str1, const char *str2)
 {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    int i;
 
+    if (strlen(str1) != strlen(str2))
+        return 1;
+
+    for (i = 0; str1[i] != '\0'; i++)
+    {
+        if (tolower(str1[i]) != tolower(str2[i]))
+            return 1;
+    }
+
+    return 0;
 }
+
 
 const char *traduzirStatusOperacao(StatusOperacao status)
 {
@@ -62,7 +75,7 @@ void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *cami
 
     printf("\n--- Cadastrar Operacao ---\n");
     printf("Codigo da operacao (ex: OP010): ");
-
+    limparBuffer();
     fgets(nova.codigoOperacao, sizeof(nova.codigoOperacao), stdin);
     nova.codigoOperacao[strcspn(nova.codigoOperacao, "\n")] = 0;
 
@@ -193,7 +206,7 @@ void consultarAtivasPorTipo(Operacao *operacoes, int totalOperacoes,
                 strftime(strInicio, sizeof(strInicio), "%H:%M", &op->horaInicio);
             }
 
-            printf("\n%s | %s | %s | %s | %.2fkg | Placa: %s | Mot: %s | Doca: %d\n",
+            printf("\n%s | %s | %s | %s | %.2ft | Placa: %s | Mot: %s | Doca: %d\n",
                 op->codigoOperacao, strChegada, strInicio, op->produto, op->pesoCarga, 
                 op->placaCaminhao, nomeMotorista, op->numeroDoca);
             
@@ -242,7 +255,7 @@ void consultarHistoricoPorPlaca(Operacao *operacoes, int totalOperacoes,
             else strcpy(strTermino, "---");
 
 
-            printf("%s | Chegou: %s | Inicio: %s | Fim: %s | %s | %s | %.2fkg | Doca: %d\n",
+            printf("%s | Chegou: %s | Inicio: %s | Fim: %s | %s | %s | %.2ft | Doca: %d\n",
                 op->codigoOperacao, strChegada, strInicio, strTermino,
                 op->tipo == CARGA ? "Carga":"Descarga", 
                 op->produto, op->pesoCarga, op->numeroDoca);
@@ -282,7 +295,7 @@ void consultarOperacoesPorDoca(Operacao *operacoes, int totalOperacoes,
                 }
             }
 
-            printf("%s | %s | %s | %s | %.2fkg | Placa: %s | Transp: %s\n",
+            printf("%s | %s | %s | %s | %.2ft | Placa: %s | Transp: %s\n",
                 op->codigoOperacao, traduzirStatusOperacao(op->status),
                 strChegada, op->produto, op->pesoCarga,
                 op->placaCaminhao, transp);
@@ -378,13 +391,25 @@ void editarOperacao(Operacao *operacoes, int totalOperacoes)
 
     Operacao *op = &operacoes[indice];
 
-    printf("Novo produto: ");
-    fgets(op->produto, sizeof(op->produto), stdin);
-    op->produto[strcspn(op->produto, "\n")] = 0;
+    char novoProduto[50];
+    do {
+        printf("Novo produto (atual: %s): ", op->produto);
+        fgets(novoProduto, sizeof(novoProduto), stdin);
+        novoProduto[strcspn(novoProduto, "\n")] = 0;
+        if (strlen(novoProduto) == 0)
+            printf("ERRO: O produto nao pode ser vazio.\n");
+    } while (strlen(novoProduto) == 0);
+    strcpy(op->produto, novoProduto);
 
-    printf("Novo peso: ");
-    scanf("%f", &op->pesoCarga);
-    limparBuffer();
+    float novoPeso;
+    do {
+        printf("Novo peso em toneladas (atual: %.2f): ", op->pesoCarga);
+        scanf("%f", &novoPeso);
+        limparBuffer();
+        if (novoPeso <= 0)
+            printf("ERRO: O peso deve ser maior que zero.\n");
+    } while (novoPeso <= 0);
+    op->pesoCarga = novoPeso;
 
     printf("Alterar status da operacao?\n [0] PENDENTE\n [1] ATIVA (grava inicio)\n [2] CONCLUIDA (grava termino)\n [3] CANCELADA\n [4] Manter o atual\nOpcao: ");
     int novoStatus;
@@ -487,7 +512,8 @@ void gerarRelatorioTransportadora(Operacao *operacoes, int totalOperacoes,
     fprintf(f, "==================================================================\n");
     fprintf(f, "RELATÓRIO DE MOVIMENTAÇÃO - SISTEMA DE GESTÃO DE PÁTIO E DOCAS\n");
     fprintf(f, "==================================================================\n");
-    fprintf(f, "Transportadora: %s\n\n", transpBusca);
+    fprintf(f, "Transportadora: %s\n", transpBusca);
+    fprintf(f, "Período: %s a %s\n\n", strDataIni, strDataFim);
 
     int count = 0;
     for (int i = 0; i < totalOperacoes; i++) {
@@ -501,7 +527,7 @@ void gerarRelatorioTransportadora(Operacao *operacoes, int totalOperacoes,
 
         for(int j=0; j<totalCaminhoes; j++) {
             if(strcmp(caminhoes[j].placa, op->placaCaminhao) == 0) {
-                if(strcasecmp(caminhoes[j].transportadora, transpBusca) == 0 || strcmp(caminhoes[j].transportadora, transpBusca) == 0) {
+                if(compararIgnoreCase(caminhoes[j].transportadora, transpBusca) == 0) {
                     pertence = 1;
                     strcpy(placa, caminhoes[j].placa);
                     strcpy(motorista, caminhoes[j].motoristaNome);
@@ -532,7 +558,7 @@ void gerarRelatorioTransportadora(Operacao *operacoes, int totalOperacoes,
                 fprintf(f, " Data Chegada: %s\n", strChegada);
                 fprintf(f, " Tipo: %s\n", op->tipo == CARGA ? "Carga" : "Descarga");
                 fprintf(f, " Produto: %s\n", op->produto);
-                fprintf(f, " Peso: %.2f kg\n", op->pesoCarga);
+                fprintf(f, " Peso: %.2f toneladas\n", op->pesoCarga);
                 fprintf(f, " Doca: Doca %d (Tipo: %s, Cap: %.2ft)\n", op->numeroDoca, tipoDocaStr, capDoca);
                 fprintf(f, " Caminhão:\n");
                 fprintf(f, "  Placa: %s\n", placa);
@@ -590,13 +616,14 @@ void gerarRelatorioProduto(Operacao *operacoes, int totalOperacoes,
     fprintf(f, "==================================================================\n");
     fprintf(f, "RELATÓRIO DE MOVIMENTAÇÃO POR PRODUTO\n");
     fprintf(f, "==================================================================\n");
-    fprintf(f, "Produto: %s\n\n", prodBusca);
+    fprintf(f, "Produto: %s\n", prodBusca);
+    fprintf(f, "Período: %s a %s\n\n", strDataIni, strDataFim);
 
     int count = 0;
     for (int i = 0; i < totalOperacoes; i++) {
         Operacao *op = &operacoes[i];
 
-        if (strcasecmp(op->produto, prodBusca) == 0 || strcmp(op->produto, prodBusca) == 0) {
+        if (compararIgnoreCase(op->produto, prodBusca) == 0) {
             time_t time_op = mktime(&op->dataHoraChegada);
             if (difftime(time_op, time_ini) >= 0 && difftime(time_fim, time_op) >= 0) {
                 char strChegada[30];
@@ -614,7 +641,7 @@ void gerarRelatorioProduto(Operacao *operacoes, int totalOperacoes,
 
                 fprintf(f, "[OPERAÇÃO: %s | TIPO: %s]\n", op->codigoOperacao, op->tipo == CARGA ? "Carga" : "Descarga");
                 fprintf(f, " Data Chegada: %s\n", strChegada);
-                fprintf(f, " Peso: %.2f kg\n", op->pesoCarga);
+                fprintf(f, " Peso: %.2f toneladas\n", op->pesoCarga);
                 fprintf(f, " Doca: Doca %d\n", op->numeroDoca);
                 fprintf(f, " Caminhão:\n");
                 fprintf(f, "  Placa: %s\n", placa);
@@ -665,8 +692,9 @@ void gerarRelatorioSumarioDocas(Operacao *operacoes, int totalOperacoes,
     }
 
     fprintf(f, "==================================================================\n");
-    fprintf(f, "RELATÓRIO DE OCUPAÇÃO DE DOCAS (SUMÁRIO GERAL)\n");
-    fprintf(f, "==================================================================\n\n");
+    fprintf(f, "RELATÓRIO DE OCUPAÇÃO DE DOCAS\n");
+    fprintf(f, "==================================================================\n");
+    fprintf(f, "Período: %s a %s\n\n", strDataIni, strDataFim);
 
     for (int d = 0; d < totalDocas; d++) {
         Doca *doca = &docas[d];

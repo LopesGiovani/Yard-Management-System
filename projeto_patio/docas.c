@@ -3,11 +3,6 @@
 #include "dados.h"
 #include "docas.h"
 
-static void limparBuffer()
-{
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
 
 void cadastrarDoca(Doca **docas, int *totalDocas, int *capDocas)
 {
