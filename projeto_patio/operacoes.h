@@ -11,7 +11,7 @@ int buscarIndicePorCodigo(Operacao *operacoes, int totalOperacoes, char *codigoO
 
 //Read
 void listarOperacoes(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
-void bucarOperacao(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
+void buscarOperacao(Operacao *operacoes, int totalOperacoes, Caminhao *caminhoes, int totalCaminhoes, Doca *docas, int totalDocas);
 
 //Update
 void editarOperacao(Operacao *operacoes, int totalOperacoes); 
@@ -22,5 +22,7 @@ void deletarOperacao(Operacao *operacoes, int *totalOperacoes);
 //Traduz status da operação
 const char *traduzirStatusOperacao(StatusOperacao status);
 
+//consulta por filtro
+void consultarOperacoesFiltradas(Operacao *operacoes, int totalOperacoes,Caminhao *caminhoes, int totalCaminhoes,Doca *docas, int totalDocas);
 
 #endif

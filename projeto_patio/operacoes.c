@@ -149,3 +149,159 @@ void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *cami
     (*totalOperacoes)++;
     printf("Operacao cadastrada com sucesso!\n");
 }
+
+void consultarOperacoesFiltradas(Operacao *operacoes, int totalOperacoes,
+                                  Caminhao *caminhoes, int totalCaminhoes,
+                                  Doca *docas, int totalDocas)
+{
+    printf("\nFiltrar por:\n");
+    printf("  1 - Placa do Caminhao\n");
+    printf("  2 - Numero da Doca\n");
+    printf("  3 - Status\n");
+    printf("Opcao: ");
+
+    int opcao;
+    scanf("%d", &opcao);
+
+    int encontrou = 0;
+
+    for (int i = 0; i < totalOperacoes; i++)
+    {
+        Operacao *op = &operacoes[i];
+        int exibir = 0;
+
+        if (opcao == 1) {
+            char placa[8];
+            printf("Placa: "); scanf("%7s", placa);
+            if (strcmp(op->placaCaminhao, placa) == 0) exibir = 1;
+        }
+        else if (opcao == 2) {
+            int numDoca;
+            printf("Numero da doca: "); scanf("%d", &numDoca);
+            if (op->numeroDoca == numDoca) exibir = 1;
+        }
+        else if (opcao == 3) {
+            printf("Status (PENDENTE[0] ATIVA[1] CONCLUIDA[2] CANCELADA[3]): ");
+            int st; scanf("%d", &st);
+            if (op->status == (StatusOperacao)st) exibir = 1;
+        }
+
+        if (exibir) {
+            printf("\n  Codigo : %s | Placa: %s | Doca: %d | Status: %s\n",
+                   op->codigoOperacao, op->placaCaminhao,
+                   op->numeroDoca, traduzirStatusOperacao(op->status));
+            encontrou = 1;
+            // se quiser exibir dados do caminhao/doca associados, busca aqui
+        }
+    }
+
+    if (!encontrou)
+        printf("Nenhuma operacao encontrada com esse filtro.\n");
+}
+
+void listarOperacoes(Operacao *operacoes, int totalOperacoes,
+                     Caminhao *caminhoes, int totalCaminhoes,
+                     Doca *docas, int totalDocas)
+{
+    if (totalOperacoes == 0)
+    {
+        printf("\nNenhuma operacao cadastrada.\n");
+        return;
+    }
+
+    printf("\n--- Lista de Operacoes ---\n");
+
+    for (int i = 0; i < totalOperacoes; i++)
+    {
+        printf("\nCodigo: %s", operacoes[i].codigoOperacao);
+        printf("\nPlaca Caminhao: %s", operacoes[i].placaCaminhao);
+        printf("\nNumero Doca: %d", operacoes[i].numeroDoca);
+        printf("\nCarga: %s", operacoes[i].carga);
+        printf("\nPeso: %.2f toneladas", operacoes[i].pesoCarga);
+        printf("\nStatus: %s\n", traduzirStatusOperacao(operacoes[i].status));
+    }
+}
+
+void buscarOperacao(Operacao *operacoes, int totalOperacoes,
+                    Caminhao *caminhoes, int totalCaminhoes,
+                    Doca *docas, int totalDocas)
+{
+    char codigo[10];
+
+    printf("\nDigite o codigo da operacao: ");
+    scanf("%9s", codigo);
+    limparBuffer();
+
+    int indice = buscarIndicePorCodigo(operacoes, totalOperacoes, codigo);
+
+    if (indice == -1)
+    {
+        printf("Operacao nao encontrada.\n");
+        return;
+    }
+
+    Operacao *op = &operacoes[indice];
+
+    printf("\n--- Operacao Encontrada ---\n");
+    printf("Codigo: %s\n", op->codigoOperacao);
+    printf("Placa: %s\n", op->placaCaminhao);
+    printf("Doca: %d\n", op->numeroDoca);
+    printf("Carga: %s\n", op->carga);
+    printf("Peso: %.2f\n", op->pesoCarga);
+    printf("Status: %s\n", traduzirStatusOperacao(op->status));
+}
+
+void editarOperacao(Operacao *operacoes, int totalOperacoes)
+{
+    char codigo[10];
+
+    printf("\nCodigo da operacao para editar: ");
+    scanf("%9s", codigo);
+    limparBuffer();
+
+    int indice = buscarIndicePorCodigo(operacoes, totalOperacoes, codigo);
+
+    if (indice == -1)
+    {
+        printf("Operacao nao encontrada.\n");
+        return;
+    }
+
+    Operacao *op = &operacoes[indice];
+
+    printf("Nova carga: ");
+    fgets(op->carga, sizeof(op->carga), stdin);
+    op->carga[strcspn(op->carga, "\n")] = 0;
+
+    printf("Novo peso: ");
+    scanf("%f", &op->pesoCarga);
+    limparBuffer();
+
+    printf("Operacao atualizada com sucesso!\n");
+}
+
+void deletarOperacao(Operacao *operacoes, int *totalOperacoes)
+{
+    char codigo[10];
+
+    printf("\nCodigo da operacao para deletar: ");
+    scanf("%9s", codigo);
+    limparBuffer();
+
+    int indice = buscarIndicePorCodigo(operacoes, *totalOperacoes, codigo);
+
+    if (indice == -1)
+    {
+        printf("Operacao nao encontrada.\n");
+        return;
+    }
+
+    for (int i = indice; i < *totalOperacoes - 1; i++)
+    {
+        operacoes[i] = operacoes[i + 1];
+    }
+
+    (*totalOperacoes)--;
+
+    printf("Operacao removida com sucesso.\n");
+}
