@@ -501,24 +501,24 @@ void gerarRelatorioTransportadora(Operacao *operacoes, int totalOperacoes,
     transpBusca[strcspn(transpBusca, "\n")] = 0;
 
     char strDataIni[15], strDataFim[15];
-    printf("Data Inicial (DD/MM/AAAA): ");
-    scanf("%14s", strDataIni);
-    limparBuffer();
     struct tm tm_ini = {0};
-    if (!validarData(strDataIni, &tm_ini)) {
-        printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
-        return;
-    }
+    do {
+        printf("Data Inicial (DD/MM/AAAA): ");
+        scanf("%14s", strDataIni);
+        limparBuffer();
+        if (!validarData(strDataIni, &tm_ini))
+            printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
+    } while (!validarData(strDataIni, &tm_ini));
     time_t time_ini = mktime(&tm_ini);
 
-    printf("Data Final (DD/MM/AAAA): ");
-    scanf("%14s", strDataFim);
-    limparBuffer();
     struct tm tm_fim = {0};
-    if (!validarData(strDataFim, &tm_fim)) {
-        printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
-        return;
-    }
+    do {
+        printf("Data Final (DD/MM/AAAA): ");
+        scanf("%14s", strDataFim);
+        limparBuffer();
+        if (!validarData(strDataFim, &tm_fim))
+            printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
+    } while (!validarData(strDataFim, &tm_fim));
     tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
     time_t time_fim = mktime(&tm_fim);
 
@@ -607,24 +607,24 @@ void gerarRelatorioProduto(Operacao *operacoes, int totalOperacoes,
     prodBusca[strcspn(prodBusca, "\n")] = 0;
 
     char strDataIni[15], strDataFim[15];
-    printf("Data Inicial (DD/MM/AAAA): ");
-    scanf("%14s", strDataIni);
-    limparBuffer();
     struct tm tm_ini = {0};
-    if (!validarData(strDataIni, &tm_ini)) {
-        printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
-        return;
-    }
+    do {
+        printf("Data Inicial (DD/MM/AAAA): ");
+        scanf("%14s", strDataIni);
+        limparBuffer();
+        if (!validarData(strDataIni, &tm_ini))
+            printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
+    } while (!validarData(strDataIni, &tm_ini));
     time_t time_ini = mktime(&tm_ini);
 
-    printf("Data Final (DD/MM/AAAA): ");
-    scanf("%14s", strDataFim);
-    limparBuffer();
     struct tm tm_fim = {0};
-    if (!validarData(strDataFim, &tm_fim)) {
-        printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
-        return;
-    }
+    do {
+        printf("Data Final (DD/MM/AAAA): ");
+        scanf("%14s", strDataFim);
+        limparBuffer();
+        if (!validarData(strDataFim, &tm_fim))
+            printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
+    } while (!validarData(strDataFim, &tm_fim));
     tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
     time_t time_fim = mktime(&tm_fim);
 
@@ -687,24 +687,24 @@ void gerarRelatorioSumarioDocas(Operacao *operacoes, int totalOperacoes,
     printf("Sumarizando dados gerais de operacao...\n");
 
     char strDataIni[15], strDataFim[15];
-    printf("Data Inicial (DD/MM/AAAA): ");
-    scanf("%14s", strDataIni);
-    limparBuffer();
     struct tm tm_ini = {0};
-    if (!validarData(strDataIni, &tm_ini)) {
-        printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
-        return;
-    }
+    do {
+        printf("Data Inicial (DD/MM/AAAA): ");
+        scanf("%14s", strDataIni);
+        limparBuffer();
+        if (!validarData(strDataIni, &tm_ini))
+            printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
+    } while (!validarData(strDataIni, &tm_ini));
     time_t time_ini = mktime(&tm_ini);
 
-    printf("Data Final (DD/MM/AAAA): ");
-    scanf("%14s", strDataFim);
-    limparBuffer();
     struct tm tm_fim = {0};
-    if (!validarData(strDataFim, &tm_fim)) {
-        printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
-        return;
-    }
+    do {
+        printf("Data Final (DD/MM/AAAA): ");
+        scanf("%14s", strDataFim);
+        limparBuffer();
+        if (!validarData(strDataFim, &tm_fim))
+            printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
+    } while (!validarData(strDataFim, &tm_fim));
     tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
     time_t time_fim = mktime(&tm_fim);
 
