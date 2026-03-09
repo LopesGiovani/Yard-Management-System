@@ -27,6 +27,8 @@ void cadastrarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminh
     printf("Digite a placa do caminhao: ");
     limparBuffer();
     fgets(novo.placa, sizeof(novo.placa), stdin);
+    if (strchr(novo.placa, '\n') == NULL)
+        limparBuffer();
     novo.placa[strcspn(novo.placa, "\n")] = 0;
 
     if (buscarCaminhaoPorPlaca(*caminhoes, *totalCaminhoes, novo.placa) != -1)
@@ -117,6 +119,8 @@ void editarCaminhao(Caminhao *caminhoes, int totalCaminhoes)
     printf("Digite a placa do caminhao desejado: ");
     limparBuffer();
     fgets(placaTemp, sizeof(placaTemp), stdin);
+    if (strchr(placaTemp, '\n') == NULL)
+        limparBuffer();
     placaTemp[strcspn(placaTemp, "\n")] = 0;
 
     int indiceEncontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
@@ -184,6 +188,8 @@ void deletarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminhoe
     printf("Digite a placa do caminhao desejado: ");
     limparBuffer();
     fgets(placaTemp, sizeof(placaTemp), stdin);
+    if (strchr(placaTemp, '\n') == NULL)
+        limparBuffer();
     placaTemp[strcspn(placaTemp, "\n")] = 0;
 
     // Verifica se o caminhao existe

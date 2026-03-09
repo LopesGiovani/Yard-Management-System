@@ -87,6 +87,8 @@ void cadastrarOperacao(Operacao **operacoes, int *totalOperacoes, Caminhao *cami
 
     printf("Placa do caminhao: ");
     fgets(nova.placaCaminhao, sizeof(nova.placaCaminhao), stdin);
+    if (strchr(nova.placaCaminhao, '\n') == NULL)
+        limparBuffer();
     nova.placaCaminhao[strcspn(nova.placaCaminhao, "\n")] = 0;
 
     int caminhaoOk = 0;
