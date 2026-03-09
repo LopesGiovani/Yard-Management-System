@@ -7,6 +7,21 @@
 #include <time.h>
 #include <ctype.h>
 
+// Valida se a string esta no formato DD/MM/AAAA 
+// Retorna 1 se valida, 0 se invalida
+int validarData(const char *strData, struct tm *resultado)
+{
+    int dia, mes, ano;
+    if (sscanf(strData, "%d/%d/%d", &dia, &mes, &ano) != 3)
+        return 0;
+    if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 1900)
+        return 0;
+    resultado->tm_mday = dia;
+    resultado->tm_mon = mes - 1;
+    resultado->tm_year = ano - 1900;
+    return 1;
+}
+
 // Compara duas strings ignorando maiusculas/minusculas
 // Retorna 0 se forem iguais, 1 se forem diferentes
 int compararIgnoreCase(const char *str1, const char *str2)
@@ -490,24 +505,20 @@ void gerarRelatorioTransportadora(Operacao *operacoes, int totalOperacoes,
     scanf("%14s", strDataIni);
     limparBuffer();
     struct tm tm_ini = {0};
-    if (sscanf(strDataIni, "%d/%d/%d", &tm_ini.tm_mday, &tm_ini.tm_mon, &tm_ini.tm_year) != 3) {
+    if (!validarData(strDataIni, &tm_ini)) {
         printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
         return;
     }
-    tm_ini.tm_mon -= 1;
-    tm_ini.tm_year -= 1900;
     time_t time_ini = mktime(&tm_ini);
 
     printf("Data Final (DD/MM/AAAA): ");
     scanf("%14s", strDataFim);
     limparBuffer();
     struct tm tm_fim = {0};
-    if (sscanf(strDataFim, "%d/%d/%d", &tm_fim.tm_mday, &tm_fim.tm_mon, &tm_fim.tm_year) != 3) {
+    if (!validarData(strDataFim, &tm_fim)) {
         printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
         return;
     }
-    tm_fim.tm_mon -= 1;
-    tm_fim.tm_year -= 1900;
     tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
     time_t time_fim = mktime(&tm_fim);
 
@@ -600,24 +611,20 @@ void gerarRelatorioProduto(Operacao *operacoes, int totalOperacoes,
     scanf("%14s", strDataIni);
     limparBuffer();
     struct tm tm_ini = {0};
-    if (sscanf(strDataIni, "%d/%d/%d", &tm_ini.tm_mday, &tm_ini.tm_mon, &tm_ini.tm_year) != 3) {
+    if (!validarData(strDataIni, &tm_ini)) {
         printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
         return;
     }
-    tm_ini.tm_mon -= 1;
-    tm_ini.tm_year -= 1900;
     time_t time_ini = mktime(&tm_ini);
 
     printf("Data Final (DD/MM/AAAA): ");
     scanf("%14s", strDataFim);
     limparBuffer();
     struct tm tm_fim = {0};
-    if (sscanf(strDataFim, "%d/%d/%d", &tm_fim.tm_mday, &tm_fim.tm_mon, &tm_fim.tm_year) != 3) {
+    if (!validarData(strDataFim, &tm_fim)) {
         printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
         return;
     }
-    tm_fim.tm_mon -= 1;
-    tm_fim.tm_year -= 1900;
     tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
     time_t time_fim = mktime(&tm_fim);
 
@@ -684,24 +691,20 @@ void gerarRelatorioSumarioDocas(Operacao *operacoes, int totalOperacoes,
     scanf("%14s", strDataIni);
     limparBuffer();
     struct tm tm_ini = {0};
-    if (sscanf(strDataIni, "%d/%d/%d", &tm_ini.tm_mday, &tm_ini.tm_mon, &tm_ini.tm_year) != 3) {
+    if (!validarData(strDataIni, &tm_ini)) {
         printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
         return;
     }
-    tm_ini.tm_mon -= 1;
-    tm_ini.tm_year -= 1900;
     time_t time_ini = mktime(&tm_ini);
 
     printf("Data Final (DD/MM/AAAA): ");
     scanf("%14s", strDataFim);
     limparBuffer();
     struct tm tm_fim = {0};
-    if (sscanf(strDataFim, "%d/%d/%d", &tm_fim.tm_mday, &tm_fim.tm_mon, &tm_fim.tm_year) != 3) {
+    if (!validarData(strDataFim, &tm_fim)) {
         printf("ERRO: Data invalida! Use o formato DD/MM/AAAA.\n");
         return;
     }
-    tm_fim.tm_mon -= 1;
-    tm_fim.tm_year -= 1900;
     tm_fim.tm_hour = 23; tm_fim.tm_min = 59; tm_fim.tm_sec = 59;
     time_t time_fim = mktime(&tm_fim);
 
