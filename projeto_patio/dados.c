@@ -1,25 +1,155 @@
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "dados.h"
 
-Caminhao caminhoes[5];
-Doca docas[5];
-Operacao operacoes[5];
+Caminhao *caminhoes;
+Doca *docas;
+Operacao *operacoes;
 
-int totalCaminhoes = 3;
-int totalDocas = 3;
-int totalOperacoes = 3;
+// Total de registros cadastrados
+int totalCaminhoes = 0;
+int totalDocas = 0;
+int totalOperacoes = 0;
+
+// Capacidade atual alocada (total + slots livres)
+int capCaminhoes = 0;
+int capDocas = 0;
+int capOperacoes = 0;
 
 void inicializarDados()
 {
-    caminhoes[0] = (Caminhao){"ABC1234", "TransporteA", "CaminhaoA", "Joao Silva", 10};
-    caminhoes[1] = (Caminhao){"DEF5678", "TransporteB", "CaminhaoB", "Maria Silva", 15};
-    caminhoes[2] = (Caminhao){"GHI9012", "TransporteC", "CaminhaoC", "Carlos Oliveira", 20};
+    caminhoes = calloc(EXTRA, sizeof(Caminhao));
+    docas = calloc(EXTRA, sizeof(Doca));
+    operacoes = calloc(EXTRA, sizeof(Operacao));
 
-    docas[0] = (Doca){1, CARGA, LIVRE, 20.0};
-    docas[1] = (Doca){2, DESCARGA, LIVRE, 25.0};
-    docas[2] = (Doca){3, CARGA, LIVRE, 30.0};
+    if (caminhoes == NULL || docas == NULL || operacoes == NULL)
+    {
+        printf("ERRO: Falha ao alocar memoria inicial!\n");
+        exit(1);
+    }
 
-    operacoes[0] = (Operacao){"OP001", "ABC1234", 1, {0}, {0}, {0}, CARGA, "ProdutoA", 10.0, PENDENTE}; // Datas inicializadas como zero apenas para mock
-    operacoes[1] = (Operacao){"OP002", "DEF5678", 2, {0}, {0}, {0}, DESCARGA, "ProdutoB", 15.0, PENDENTE};
-    operacoes[2] = (Operacao){"OP003", "GHI9012", 3, {0}, {0}, {0}, CARGA, "ProdutoC", 20.0, PENDENTE};
+    capCaminhoes = EXTRA;
+    capDocas = EXTRA;
+    capOperacoes = EXTRA;
+}
+void salvarDados()
+{
+    FILE *fp;
+    fp = fopen("caminhoes.bin", "wb");
+    if (fp != NULL)
+    {
+        fwrite(&totalCaminhoes, sizeof(totalCaminhoes), 1, fp);
+        fwrite(caminhoes, sizeof(Caminhao), totalCaminhoes, fp);
+        fclose(fp);
+    }
+    else
+        printf("ERRO: Nao foi possivel salvar caminhoes.bin\n");
+
+    fp = fopen("docas.bin", "wb");
+    if (fp != NULL)
+    {
+        fwrite(&totalDocas, sizeof(totalDocas), 1, fp);
+        fwrite(docas, sizeof(Doca), totalDocas, fp);
+        fclose(fp);
+    }
+    else
+        printf("ERRO: Nao foi possivel salvar docas.bin\n");
+
+    fp = fopen("operacoes.bin", "wb");
+    if (fp != NULL)
+    {
+        fwrite(&totalOperacoes, sizeof(totalOperacoes), 1, fp);
+        fwrite(operacoes, sizeof(Operacao), totalOperacoes, fp);
+        fclose(fp);
+    }
+    else
+        printf("ERRO: Nao foi possivel salvar operacoes.bin\n");
+
+    printf("Dados salvos com sucesso.\n");
+}
+
+void carregarCaminhoes()
+{
+    int total;
+    FILE *fp = fopen("caminhoes.bin", "rb");
+
+    if (fp == NULL)
+        return;
+
+    fread(&total, sizeof(total), 1, fp);
+    if (total > capCaminhoes)
+    {
+        Caminhao *temp = realloc(caminhoes, (total + EXTRA) * sizeof(Caminhao));
+        if (temp == NULL)
+        {
+            printf("ERRO: Falha ao carregar caminhoes.bin\n");
+            fclose(fp);
+            return;
+        }
+        caminhoes = temp;
+        capCaminhoes = total + EXTRA;
+    }
+    fread(caminhoes, sizeof(Caminhao), total, fp);
+    totalCaminhoes = total;
+    fclose(fp);
+}
+
+void carregarDocas()
+{
+    int total;
+    FILE *fp = fopen("docas.bin", "rb");
+
+    if (fp == NULL)
+        return;
+
+    fread(&total, sizeof(total), 1, fp);
+    if (total > capDocas)
+    {
+        Doca *temp = realloc(docas, (total + EXTRA) * sizeof(Doca));
+        if (temp == NULL)
+        {
+            printf("ERRO: Falha ao carregar docas.bin\n");
+            fclose(fp);
+            return;
+        }
+        docas = temp;
+        capDocas = total + EXTRA;
+    }
+    fread(docas, sizeof(Doca), total, fp);
+    totalDocas = total;
+    fclose(fp);
+}
+
+void carregarOperacoes()
+{
+    int total;
+    FILE *fp = fopen("operacoes.bin", "rb");
+
+    if (fp == NULL)
+        return;
+
+    fread(&total, sizeof(total), 1, fp);
+    if (total > capOperacoes)
+    {
+        Operacao *temp = realloc(operacoes, (total + EXTRA) * sizeof(Operacao));
+        if (temp == NULL)
+        {
+            printf("ERRO: Falha ao carregar operacoes.bin\n");
+            fclose(fp);
+            return;
+        }
+        operacoes = temp;
+        capOperacoes = total + EXTRA;
+    }
+    fread(operacoes, sizeof(Operacao), total, fp);
+    totalOperacoes = total;
+    fclose(fp);
+}
+
+void carregarDados()
+{
+    carregarCaminhoes();
+    carregarDocas();
+    carregarOperacoes();
 }

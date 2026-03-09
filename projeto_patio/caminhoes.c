@@ -1,32 +1,35 @@
 #include "caminhoes.h"
+#include "dados.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
-// 'static' torna a funcao visivel apenas neste arquivo, evitando conflito de nomes com outros modulos (erro de linker)
-static void limparBuffer()
-{
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF)
-        ;
-}
-
-void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
+void cadastrarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminhoes)
 {
 
-    if (*totalCaminhoes >= 5)
+    if (*totalCaminhoes >= *capCaminhoes)
     {
-        printf("\nERRO: Capacidade maxima de caminhoes atingida (5).\n");
-        return;
+        int novaCap = *capCaminhoes + EXTRA;
+        Caminhao *temp = realloc(*caminhoes, novaCap * sizeof(Caminhao));
+
+        if(temp==NULL){
+
+            printf("\nERRO: Capacidade maxima de caminhoes atingida (5).\n");
+            return;           
+        }
+
+        *caminhoes = temp;
+        *capCaminhoes = novaCap;
     }
 
     Caminhao novo;
     printf("\n--- Cadastrar Caminhao ---\n");
     printf("Digite a placa do caminhao: ");
     limparBuffer();
-    fgets(novo.placa, 8, stdin);
+    fgets(novo.placa, sizeof(novo.placa), stdin);
     novo.placa[strcspn(novo.placa, "\n")] = 0;
 
-    if (buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, novo.placa) != NULL)
+    if (buscarCaminhaoPorPlaca(*caminhoes, *totalCaminhoes, novo.placa) != -1)
     {
         printf("ERRO: Ja existe um caminhao cadastrado com esta placa.\n");
         return;
@@ -36,7 +39,7 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     {
         printf("Digite a transportadora: ");
 
-        fgets(novo.transportadora, 50, stdin);
+        fgets(novo.transportadora, sizeof(novo.transportadora), stdin);
         novo.transportadora[strcspn(novo.transportadora, "\n")] = 0;
         if (strlen(novo.transportadora) == 0)
             printf("ERRO: O campo nao pode ser vazio.\n");
@@ -46,7 +49,7 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     {
         printf("Tipo de Veiculo: ");
 
-        fgets(novo.tipoVeiculo, 50, stdin);
+        fgets(novo.tipoVeiculo, sizeof(novo.tipoVeiculo), stdin);
         novo.tipoVeiculo[strcspn(novo.tipoVeiculo, "\n")] = 0;
         if (strlen(novo.tipoVeiculo) == 0)
             printf("ERRO: O campo nao pode ser vazio.\n");
@@ -55,138 +58,178 @@ void cadastrarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
     do
     {
         printf("Nome do Motorista: ");
-        fgets(novo.motoristaNome, 50, stdin);
+        fgets(novo.motoristaNome, sizeof(novo.motoristaNome), stdin);
         novo.motoristaNome[strcspn(novo.motoristaNome, "\n")] = 0;
         if (strlen(novo.motoristaNome) == 0)
             printf("ERRO: O campo nao pode ser vazio.\n");
     } while (strlen(novo.motoristaNome) == 0);
 
-    printf("Capacidade de Carga (toneladas): ");
-    scanf("%f", &novo.capacidadeCarga);
-    limparBuffer();
-
-    caminhoes[(*totalCaminhoes)] = novo;
-
+    do
+    {
+        printf("Capacidade de Carga (toneladas): ");
+        scanf("%f", &novo.capacidadeCarga);
+        limparBuffer();
+        if(novo.capacidadeCarga <= 0)
+            printf("ERRO: A capacidade deve ser maior que zero.\n");
+    } while (novo.capacidadeCarga <= 0 );
+    
+    (*caminhoes)[(*totalCaminhoes)] = novo;
     (*totalCaminhoes)++;
-
     printf("Caminhao cadastrado com sucesso!\n");
 }
 
-void listarCaminhoes(Caminhao *caminhoes, int *totalCaminhoes)
+void listarCaminhoes(Caminhao *caminhoes, int totalCaminhoes)
 {
     printf("\n--- Lista de Caminhoes Cadastrados ---\n");
-    if (*totalCaminhoes == 0)
+    if (totalCaminhoes == 0)
     {
         printf("Nenhum caminhao cadastrado.\n");
         return;
     }
 
-    for (int i = 0; i < *totalCaminhoes; i++)
+    for (int i = 0; i < totalCaminhoes; i++)
     {
         printf("Caminhao %d:\n", i + 1);
-        printf("Placa: %s\n", (caminhoes + i)->placa);
-        printf("Transportadora: %s\n", (caminhoes + i)->transportadora);
-        printf("Tipo de Veiculo: %s\n", (caminhoes + i)->tipoVeiculo);
-        printf("Motorista: %s\n", (caminhoes + i)->motoristaNome);
-        printf("Capacidade de Carga: %.2f toneladas\n", (caminhoes + i)->capacidadeCarga);
-        printf("-----------------------------\n");
+        printf("  Placa         : %s\n", (caminhoes + i)->placa);
+        printf("  Transportadora: %s\n", (caminhoes + i)->transportadora);
+        printf("  Tipo de Veiculo: %s\n", (caminhoes + i)->tipoVeiculo);
+        printf("  Motorista     : %s\n", (caminhoes + i)->motoristaNome);
+        printf("  Cap. de Carga : %.2f toneladas\n", (caminhoes + i)->capacidadeCarga);
+        printf("  -----------------------------\n");
     }
 }
 
-Caminhao *buscarCaminhaoPorPlaca(Caminhao *caminhoes, int *totalCaminhoes, char *placa)
+int buscarCaminhaoPorPlaca(Caminhao *caminhoes, int totalCaminhoes, char *placa)
 {
-    for (int i = 0; i < *totalCaminhoes; i++)
+    for (int i = 0; i < totalCaminhoes; i++)
     {
         if (strcmp((caminhoes + i)->placa, placa) == 0)
-        {
-        
-            return (caminhoes + i);
-        }
+            return i;
     }
 
-    return NULL;
+    return -1;
 }
 
-void editarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
+void editarCaminhao(Caminhao *caminhoes, int totalCaminhoes)
 {
     char placaTemp[8];
     printf("\n--- Editar Caminhao ---\n");
     printf("Digite a placa do caminhao desejado: ");
     limparBuffer();
-    fgets(placaTemp, 8, stdin);
+    fgets(placaTemp, sizeof(placaTemp), stdin);
     placaTemp[strcspn(placaTemp, "\n")] = 0;
 
-    Caminhao *encontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
+    int indiceEncontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
 
-    if (encontrado == NULL)
+    if (indiceEncontrado == -1)
     {
-        printf("ERRO: Caminhao nao encontrado\n");
+        printf("ERRO: Caminhao nao encontrado.\n");
         return;
     }
 
+    Caminhao *encontrado = &caminhoes[indiceEncontrado];
+
     printf("Editando caminhao da placa %s\n", placaTemp);
-
-    printf("Nova Transportadora (Enter mantem '%s'): ", encontrado->transportadora);
+    
     char novaTransp[50];
+    printf("Nova Transportadora (Enter mantem '%s'): ", encontrado->transportadora);
 
-    fgets(novaTransp, 50, stdin);
+    fgets(novaTransp, sizeof(novaTransp), stdin);
     if (novaTransp[0] != '\n')
     {
         novaTransp[strcspn(novaTransp, "\n")] = 0;
         strcpy(encontrado->transportadora, novaTransp);
     }
 
-    printf("Novo motorista (Enter mantem '%s'): ", encontrado->motoristaNome);
     char novoMotorista[50];
-    fgets(novoMotorista, 50, stdin);
+    printf("Novo motorista (Enter mantem '%s'): ", encontrado->motoristaNome);
+
+    fgets(novoMotorista, sizeof(novoMotorista), stdin);
     if (novoMotorista[0] != '\n')
     {
         novoMotorista[strcspn(novoMotorista, "\n")] = 0;
         strcpy(encontrado->motoristaNome, novoMotorista);
     }
 
+    char novoTipo[50];
+    printf("Novo tipo de veiculo (Enter mantem '%s'): ", encontrado->tipoVeiculo);
+
+    fgets(novoTipo, sizeof(novoTipo), stdin);
+    if (novoTipo[0] != '\n')
+    {
+        novoTipo[strcspn(novoTipo, "\n")] = 0;
+        strcpy(encontrado->tipoVeiculo, novoTipo);
+    }
+
+    char entradaCap[20];
+    printf("Nova capacidade de carga em toneladas (Enter mantem '%.2f'): ", encontrado->capacidadeCarga);
+    fgets(entradaCap, sizeof(entradaCap), stdin);
+    if (entradaCap[0] != '\n')
+    {
+        float novaCap;
+        if (sscanf(entradaCap, "%f", &novaCap) == 1 && novaCap > 0)
+            encontrado->capacidadeCarga = novaCap;
+        else
+            printf("Valor invalido, capacidade mantida.\n");
+    }
+
     printf("Caminhao atualizado!\n");
 }
 
-void deletarCaminhao(Caminhao *caminhoes, int *totalCaminhoes)
+void deletarCaminhao(Caminhao **caminhoes, int *totalCaminhoes, int *capCaminhoes,
+                     Operacao *operacoes, int totalOperacoes)
 {
     char placaTemp[8];
     printf("\n--- Deletar Caminhao ---\n");
     printf("Digite a placa do caminhao desejado: ");
     limparBuffer();
-    fgets(placaTemp, 8, stdin);
+    fgets(placaTemp, sizeof(placaTemp), stdin);
     placaTemp[strcspn(placaTemp, "\n")] = 0;
 
-    Caminhao *encontrado = buscarCaminhaoPorPlaca(caminhoes, totalCaminhoes, placaTemp);
-
-    if (encontrado == NULL)
-    {
-        printf("ERRO: Caminhao nao encontrado\n");
-        return;
-    }
-
+    // Verifica se o caminhao existe
     int indice = -1;
-
     for (int i = 0; i < *totalCaminhoes; i++)
     {
-        if (strcmp((caminhoes + i)->placa, placaTemp) == 0)
+        if (strcmp((*caminhoes + i)->placa, placaTemp) == 0)
         {
             indice = i;
-            break; // Para sair do loop apenas
+            break;
         }
     }
-
     if (indice == -1)
     {
         printf("ERRO: Caminhao nao encontrado.\n");
         return;
     }
 
-    for (int i = indice; i < *totalCaminhoes - 1; i++)
+    // Restricao de integridade: nao pode deletar se estiver em alguma operacao
+    for (int i = 0; i < totalOperacoes; i++)
     {
-        caminhoes[i] = caminhoes[i + 1];
+        if (strcmp(operacoes[i].placaCaminhao, placaTemp) == 0)
+        {
+            printf("ERRO: Caminhao esta em uso na operacao '%s'. Remova a operacao primeiro.\n",
+                   operacoes[i].codigoOperacao);
+            return;
+        }
     }
 
-    (*totalCaminhoes)--;
+    // Desloca elementos para preencher o buraco
+    for (int i = indice; i < *totalCaminhoes - 1; i++)
+        (*caminhoes)[i] = (*caminhoes)[i + 1];
+    (*totalCaminhoes)--; 
+
+    // Verifica se ha posicoes livres demais e reduz
+    int livres = *capCaminhoes - *totalCaminhoes;
+    if (livres > EXTRA) 
+    {
+        int novaCap = *totalCaminhoes + EXTRA;
+        Caminhao *temp = realloc(*caminhoes, novaCap * sizeof(Caminhao));
+        if (temp != NULL)
+        {
+            *caminhoes    = temp;
+            *capCaminhoes = novaCap;
+        }
+    }
+
     printf("Caminhao removido com sucesso.\n");
 }
